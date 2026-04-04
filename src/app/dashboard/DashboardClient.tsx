@@ -1,0 +1,137 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { Search, ChevronRight, FileX } from "lucide-react";
+import * as Icons from "lucide-react";
+import { useRouter } from "next/navigation";
+
+// Type definitions passed from Server Component
+type Categoria = { id: string; name: string; icon: string };
+type Tramite = { id: string; title: string; description: string; code: string; categoriaId: string | null; isOnline: boolean; targetAgeRange: string | null };
+
+export default function DashboardClient({ categorias, tramites, userAge }: { categorias: Categoria[], tramites: Tramite[], userAge: string | null | undefined }) {
+  const [selectedCat, setSelectedCat] = useState<string | null>(null);
+  const [searchCode, setSearchCode] = useState("");
+  const [searchError, setSearchError] = useState("");
+  const router = useRouter();
+
+  // Dynamic Icon Renderer
+  const IconComponent = ({ name }: { name: string }) => {
+    const Icon = (Icons as any)[name] || Icons.Circle;
+    return <Icon className="w-8 h-8 mb-2 text-blue-600" />;
+  };
+
+  // HU-06: Filtrado por tipo de tramite
+  const filteredTramites = selectedCat ? tramites.filter(t => t.categoriaId === selectedCat) : tramites;
+  const isCategoryEmpty = selectedCat && filteredTramites.length === 0;
+
+  // HU-07: Consulta por código
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSearchError("");
+    if (!searchCode.trim()) {
+      setSearchError("Debes ingresar un código para realizar la búsqueda");
+      return;
+    }
+
+    const exactMatch = tramites.find(t => t.code.toUpperCase() === searchCode.trim().toUpperCase());
+    if (exactMatch) {
+      router.push(`/tramites/${exactMatch.id}`);
+    } else {
+      setSearchError("No encontramos ningún trámite asociado al código ingresado. Verifica e intenta nuevamente.");
+    }
+  };
+
+  return (
+    <div className="space-y-8">
+      {/* HU-07 Search Component */}
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative">
+        <label className="block text-sm font-semibold text-gray-700 mb-2">Búsqueda Rápida por Código</label>
+        <form onSubmit={handleSearch} className="flex gap-2 relative">
+          <div className="relative flex-1">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              placeholder="Ej: TRM-1024"
+              value={searchCode}
+              onChange={(e) => setSearchCode(e.target.value)}
+              className={`block w-full pl-10 pr-3 py-4 border ${searchError ? 'border-red-500 bg-red-50' : 'border-gray-200'} rounded-xl focus:ring-blue-500 focus:border-blue-500 transition`}
+            />
+          </div>
+          <button type="submit" className="bg-blue-600 text-white px-8 py-4 rounded-xl min-h-[44px] min-w-[44px] font-semibold hover:bg-blue-700 transition hidden md:block">
+            Consultar
+          </button>
+        </form>
+        {searchError && (
+          <div className="mt-3 text-red-600 text-sm flex gap-2 items-center bg-red-50 p-3 rounded-lg">
+             <span className="font-semibold px-2 py-0.5 bg-red-200 text-red-800 rounded">!</span> {searchError}
+          </div>
+        )}
+      </div>
+
+      {/* HU-06 Categories Grid */}
+      <section>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Categorías de Trámites</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <button
+            onClick={() => setSelectedCat(null)}
+            className={`p-6 rounded-2xl min-h-[44px] min-w-[44px] border-2 transition-all flex flex-col items-center justify-center text-center ${!selectedCat ? 'bg-blue-50 border-blue-500' : 'bg-white border-transparent hover:border-gray-200'} shadow-sm`}
+          >
+            <Icons.LayoutGrid className="w-8 h-8 mb-2 text-gray-600" />
+            <span className="font-semibold text-gray-800">Todos</span>
+          </button>
+          
+          {categorias.map(cat => (
+            <button
+              key={cat.id}
+              onClick={() => setSelectedCat(cat.id)}
+              className={`p-6 rounded-2xl min-h-[44px] min-w-[44px] border-2 transition-all flex flex-col items-center justify-center text-center ${selectedCat === cat.id ? 'bg-blue-50 border-blue-500' : 'bg-white border-transparent hover:border-gray-200'} shadow-sm`}
+            >
+              <IconComponent name={cat.icon} />
+              <span className="font-semibold text-gray-800">{cat.name}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* Results / Empty State */}
+      <section>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-gray-900">
+            {selectedCat ? `Resultados Filtrados` : `Trámites Destacados`}
+          </h2>
+        </div>
+
+        {isCategoryEmpty ? (
+          <div className="bg-white border-2 border-dashed border-gray-200 rounded-3xl p-12 text-center">
+            <div className="flex justify-center mb-4">
+               <FileX className="w-16 h-16 text-gray-300" />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900">Sin trámites</h3>
+            <p className="text-gray-500 mt-2 max-w-md mx-auto">Por el momento no hay trámites disponibles en esta categoría.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredTramites.map(t => (
+              <Link href={`/tramites/${t.id}`} key={t.id} className="group bg-white rounded-2xl p-6 border border-gray-100 shadow-sm min-h-[44px] min-w-[44px] hover:shadow-md hover:border-blue-200 transition-all flex flex-col">
+                <div className="flex justify-between items-start mb-4">
+                  <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-lg text-xs font-bold tracking-wider">{t.code}</span>
+                  {t.isOnline && <span className="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-xs font-bold">100% Online</span>}
+                </div>
+                <h3 className="font-bold text-lg text-gray-900 leading-tight mb-2 group-hover:text-blue-600 transition">{t.title}</h3>
+                <p className="text-gray-500 text-sm line-clamp-2 mt-auto mb-4">{t.description}</p>
+                <div className="mt-auto flex items-center justify-between text-blue-600 font-semibold text-sm">
+                  <span>Iniciar Trámite</span>
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}

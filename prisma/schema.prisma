@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id              String    @id @default(cuid())
+  name            String
+  surname         String?
+  email           String    @unique
+  password        String?
+  documentType    String?
+  documentNumber  String?
+  ageRange        String?
+  termsAcceptedAt DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Categoria {
+  id       String    @id @default(cuid())
+  name     String
+  icon     String
+  tramites Tramite[]
+}
+
+model Tramite {
+  id               String            @id @default(cuid())
+  title            String
+  description      String
+  code             String            @unique
+  isOnline         Boolean           @default(false)
+  targetAgeRange   String? 
+  categoriaId      String?
+  categoria        Categoria?        @relation(fields: [categoriaId], references: [id])
+  pasos            Paso[]
+  requisitos       Requisito[]
+  puntosAtencion   PuntoAtencion[]
+  recomendaciones  Recomendacion[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+model Paso {
+  id          String   @id @default(cuid())
+  order       Int
+  title       String
+  description String
+  tramiteId   String
+  tramite     Tramite  @relation(fields: [tramiteId], references: [id], onDelete: Cascade)
+}
+
+model Requisito {
+  id        String   @id @default(cuid())
+  title     String
+  tramiteId String
+  tramite   Tramite  @relation(fields: [tramiteId], references: [id], onDelete: Cascade)
+}
+
+model PuntoAtencion {
+  id        String   @id @default(cuid())
+  address   String
+  schedule  String
+  phone     String
+  tramiteId String
+  tramite   Tramite  @relation(fields: [tramiteId], references: [id], onDelete: Cascade)
+}
+
+model Recomendacion {
+  id             String  @id @default(cuid())
+  text           String
+  targetAgeRange String?
+  tramiteId      String
+  tramite        Tramite @relation(fields: [tramiteId], references: [id], onDelete: Cascade)
+}
