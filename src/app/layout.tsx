@@ -9,7 +9,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "TRAMIX MVP",
+  title: "TRAMIX",
   description: "Plataforma digital inteligente para trámites.",
 };
 import Image from "next/image";
