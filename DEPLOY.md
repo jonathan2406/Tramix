@@ -21,8 +21,8 @@ GOOGLE_CLIENT_SECRET="tu_google_client_secret"
 3. Conecta el repositorio de GitHub donde subiste **TRAMIX**.
 4. Vercel detectará automáticamente que es un proyecto **Next.js**.
 5. Ve a **Environment Variables** en Vercel y pega las variables de tu archivo `.env`.
-6. (Opcional) En Build Command, Vercel usa `npm run build` o `pnpm run build` por defecto. Al compilar Next.js, ejecutaremos `prisma generate` automáticamente porque `package.json` lo incluye.
-    * _Nota: Para que tu BD se sincronice antes del build de Next.js, modifica los scripts de tu package.json para que el build empiece con `prisma generate && prisma db push && next build`_.
+6. (Opcional) En Build Command, Vercel usa `pnpm run build` por defecto. Al compilar Next.js, ejecutaremos `prisma generate` automáticamente porque `package.json` lo incluye.
+    * _Nota: El script de `build` ahora incluye `prisma generate && next build` para asegurar que el cliente de Prisma esté siempre actualizado._
 7. Haz clic en **Deploy**. ¡Listo hoy mismo!
 
 ## Opción 2: Despliegue en Render (Web Service + PostgreSQL)
@@ -32,7 +32,7 @@ GOOGLE_CLIENT_SECRET="tu_google_client_secret"
 3. En Render, crea un nuevo **Web Service** y enlaza tu repositorio.
 4. Elije el entorno de Node.js.
 5. Usa los siguientes comandos en Render:
-   * **Build Command:** `npm install && npx prisma generate && npx prisma db push && npm run build` (o en caso de pnpm `pnpm install && pnpm prisma generate && pnpm prisma db push && pnpm build`).
-   * **Start Command:** `npm start` (o `pnpm start`).
+   * **Build Command:** `pnpm install && pnpm build` (El build ya incluye `prisma generate`).
+   * **Start Command:** `pnpm start`.
 6. En variables de entorno, añade todas las credenciales incluyendo la base de datos de Render.
 7. Haz clic en **Create Web Service**.

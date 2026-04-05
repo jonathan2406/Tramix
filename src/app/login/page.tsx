@@ -26,11 +26,15 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Bienvenido a TRAMIX</h1>
-          <p className="text-gray-500 mt-2">Inicia sesión para continuar</p>
+    <div className="min-h-screen flex items-center justify-center bg-brand-bg p-4 relative overflow-hidden">
+      {/* Decorative blobs for auth */}
+      <div className="absolute top-0 left-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+      <div className="absolute bottom-0 right-0 w-64 h-64 bg-brand-secondary/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+
+      <div className="max-w-md w-full bg-white/80 backdrop-blur-md rounded-[2rem] shadow-2xl shadow-brand-primary/5 p-10 border border-white relative z-10">
+        <div className="text-center mb-10">
+          <h1 className="text-4xl font-black text-brand-primary-dark tracking-tight">Bienvenido</h1>
+          <p className="text-slate-500 mt-3 font-medium">Inicia sesión en <span className="text-brand-primary font-bold">TRAMIX</span></p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
@@ -39,7 +43,7 @@ export default function LoginPage() {
             <input
               type="email"
               required
-              className={`mt-1 block w-full px-4 py-3 rounded-lg border ${error ? 'border-red-500' : 'border-gray-300'} focus:ring-blue-500 focus:border-blue-500`}
+              className={`mt-1 block w-full px-4 py-3 rounded-xl border ${error ? 'border-red-500 bg-red-50' : 'border-slate-200'} focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all outline-none`}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="tu@correo.com"
@@ -51,7 +55,7 @@ export default function LoginPage() {
             <input
               type="password"
               required
-              className={`mt-1 block w-full px-4 py-3 rounded-lg border ${error ? 'border-red-500' : 'border-gray-300'} focus:ring-blue-500 focus:border-blue-500`}
+              className={`mt-1 block w-full px-4 py-3 rounded-xl border ${error ? 'border-red-500 bg-red-50' : 'border-slate-200'} focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all outline-none`}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
@@ -62,7 +66,7 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition"
+            className="w-full bg-brand-primary text-white font-bold py-4 rounded-xl hover:bg-brand-primary-dark transition-all shadow-lg shadow-brand-primary/20 active:scale-[0.98]"
           >
             Iniciar sesión
           </button>
@@ -87,8 +91,8 @@ export default function LoginPage() {
           Continuar con Google
         </button>
 
-        <p className="mt-8 text-center text-sm text-gray-600">
-          ¿No tienes una cuenta? <a href="/register" className="text-blue-600 font-semibold hover:underline">Regístrate aquí</a>
+        <p className="mt-10 text-center text-sm text-slate-500 font-medium">
+          ¿No tienes una cuenta? <a href="/register" className="text-brand-primary font-bold hover:text-brand-secondary transition-colors underline underline-offset-4 decoration-2 decoration-brand-secondary/30 hover:decoration-brand-secondary">Regístrate aquí</a>
         </p>
       </div>
     </div>

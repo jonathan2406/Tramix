@@ -19,7 +19,7 @@ export default function DashboardClient({ categorias, tramites, userAge }: { cat
   // Dynamic Icon Renderer
   const IconComponent = ({ name }: { name: string }) => {
     const Icon = (Icons as any)[name] || Icons.Circle;
-    return <Icon className="w-8 h-8 mb-2 text-blue-600" />;
+    return <Icon className="w-8 h-8 mb-2 text-brand-primary" />;
   };
 
   // HU-06: Filtrado por tipo de tramite y HU-05: Recomendación por edad
@@ -64,10 +64,10 @@ export default function DashboardClient({ categorias, tramites, userAge }: { cat
               placeholder="Ej: TRM-1024"
               value={searchCode}
               onChange={(e) => setSearchCode(e.target.value)}
-              className={`block w-full pl-10 pr-3 py-4 border ${searchError ? 'border-red-500 bg-red-50' : 'border-gray-200'} rounded-xl focus:ring-blue-500 focus:border-blue-500 transition`}
+              className={`block w-full pl-10 pr-3 py-4 border ${searchError ? 'border-red-500 bg-red-50' : 'border-slate-200'} rounded-xl focus:ring-brand-primary focus:border-brand-primary transition`}
             />
           </div>
-          <button type="submit" className="bg-blue-600 text-white px-8 py-4 rounded-xl min-h-[44px] min-w-[44px] font-semibold hover:bg-blue-700 transition hidden md:block">
+          <button type="submit" className="bg-brand-primary text-white px-8 py-4 rounded-xl min-h-[44px] min-w-[44px] font-semibold hover:bg-brand-primary-dark transition-all transform hover:scale-[1.02] active:scale-95 shadow-md hidden md:block">
             Consultar
           </button>
         </form>
@@ -84,20 +84,20 @@ export default function DashboardClient({ categorias, tramites, userAge }: { cat
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <button
             onClick={() => setSelectedCat(null)}
-            className={`p-6 rounded-2xl min-h-[44px] min-w-[44px] border-2 transition-all flex flex-col items-center justify-center text-center ${!selectedCat ? 'bg-blue-50 border-blue-500' : 'bg-white border-transparent hover:border-gray-200'} shadow-sm`}
+            className={`p-6 rounded-2xl min-h-[44px] min-w-[44px] border-2 transition-all flex flex-col items-center justify-center text-center ${!selectedCat ? 'bg-brand-primary/10 border-brand-primary' : 'bg-white border-transparent hover:border-gray-200'} shadow-sm`}
           >
-            <Icons.LayoutGrid className="w-8 h-8 mb-2 text-gray-600" />
-            <span className="font-semibold text-gray-800">Todos</span>
+            <Icons.LayoutGrid className={`w-8 h-8 mb-2 ${!selectedCat ? 'text-brand-primary' : 'text-slate-400'}`} />
+            <span className="font-semibold text-slate-800">Todos</span>
           </button>
           
           {categorias.map(cat => (
             <button
               key={cat.id}
               onClick={() => setSelectedCat(cat.id)}
-              className={`p-6 rounded-2xl min-h-[44px] min-w-[44px] border-2 transition-all flex flex-col items-center justify-center text-center ${selectedCat === cat.id ? 'bg-blue-50 border-blue-500' : 'bg-white border-transparent hover:border-gray-200'} shadow-sm`}
+              className={`p-6 rounded-2xl min-h-[44px] min-w-[44px] border-2 transition-all flex flex-col items-center justify-center text-center ${selectedCat === cat.id ? 'bg-brand-primary/10 border-brand-primary' : 'bg-white border-transparent hover:border-gray-200'} shadow-sm`}
             >
               <IconComponent name={cat.icon} />
-              <span className="font-semibold text-gray-800">{cat.name}</span>
+              <span className="font-semibold text-slate-800">{cat.name}</span>
             </button>
           ))}
         </div>
@@ -122,14 +122,14 @@ export default function DashboardClient({ categorias, tramites, userAge }: { cat
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredTramites.map(t => (
-              <Link href={`/tramites/${t.id}`} key={t.id} className="group bg-white rounded-2xl p-6 border border-gray-100 shadow-sm min-h-[44px] min-w-[44px] hover:shadow-md hover:border-blue-200 transition-all flex flex-col">
+              <Link href={`/tramites/${t.id}`} key={t.id} className="group bg-white rounded-2xl p-6 border border-gray-100 shadow-sm min-h-[44px] min-w-[44px] hover:shadow-lg hover:border-brand-primary/30 transition-all flex flex-col hover:-translate-y-1">
                 <div className="flex justify-between items-start mb-4">
-                  <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-lg text-xs font-bold tracking-wider">{t.code}</span>
-                  {t.isOnline && <span className="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-xs font-bold">100% Online</span>}
+                  <span className="px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-xs font-bold tracking-wider">{t.code}</span>
+                  {t.isOnline && <span className="px-3 py-1 bg-brand-secondary/20 text-brand-secondary-dark rounded-lg text-xs font-bold ring-1 ring-brand-secondary/30">100% Online</span>}
                 </div>
-                <h3 className="font-bold text-lg text-gray-900 leading-tight mb-2 group-hover:text-blue-600 transition">{t.title}</h3>
-                <p className="text-gray-500 text-sm line-clamp-2 mt-auto mb-4">{t.description}</p>
-                <div className="mt-auto flex items-center justify-between text-blue-600 font-semibold text-sm">
+                <h3 className="font-bold text-lg text-brand-primary-dark leading-tight mb-2 group-hover:text-brand-secondary transition-colors">{t.title}</h3>
+                <p className="text-slate-500 text-sm line-clamp-2 mt-auto mb-4">{t.description}</p>
+                <div className="mt-auto flex items-center justify-between text-brand-primary font-bold text-sm">
                   <span>Iniciar Trámite</span>
                   <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>

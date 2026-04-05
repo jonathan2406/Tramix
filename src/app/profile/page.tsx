@@ -82,14 +82,15 @@ export default function ProfilePage() {
   return (
     <div className="max-w-3xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden mt-8 relative">
       {toast && (
-        <div className={`absolute top-4 right-4 px-6 py-3 rounded shadow-md z-50 text-white animate-fade-in-down ${toast.type === "success" ? "bg-green-600" : "bg-red-600"}`}>
+        <div className={`absolute top-4 right-4 px-6 py-3 rounded-xl shadow-xl z-50 text-white font-bold animate-fade-in-down ${toast.type === "success" ? "bg-brand-secondary" : "bg-red-600"}`}>
           {toast.message}
         </div>
       )}
 
-      <div className="bg-blue-700 px-8 py-6 text-white">
-        <h1 className="text-2xl font-bold">Completar Perfil</h1>
-        <p className="text-blue-100 text-sm mt-1">Configura tus datos para recibir recomendaciones y trámites a tu medida.</p>
+      <div className="bg-brand-primary px-8 py-8 text-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl translate-x-1/2 -translate-y-1/2"></div>
+        <h1 className="text-3xl font-black tracking-tight">Mi Perfil</h1>
+        <p className="text-white/80 text-sm mt-2 font-medium">Configura tus datos para recibir una experiencia personalizada en <span className="font-bold">TRAMIX</span>.</p>
       </div>
 
       <form onSubmit={handleSave} className="p-8 space-y-6">
@@ -99,7 +100,7 @@ export default function ProfilePage() {
             <label className="block text-sm font-medium text-gray-700">Nombres *</label>
             <input
               type="text"
-              className={`mt-1 block w-full px-4 py-2 rounded-lg border ${errors.name ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'} focus:outline-none`}
+            className={`block w-full px-4 py-3 rounded-xl border bg-white focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all outline-none ${errors.name || errors.surname || errors.documentType || errors.documentNumber || errors.ageRange ? 'border-red-500' : 'border-slate-200'}`}
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
@@ -168,7 +169,7 @@ export default function ProfilePage() {
         <div className="pt-6 flex justify-end">
           <button
             type="submit"
-            className="bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg min-h-[44px] min-w-[44px] hover:bg-blue-700 transition shadow"
+            className="bg-brand-primary text-white font-bold px-10 py-4 rounded-xl min-h-[44px] min-w-[44px] hover:bg-brand-primary-dark transition-all shadow-lg shadow-brand-primary/20 active:scale-95"
           >
             Guardar y Actualizar
           </button>

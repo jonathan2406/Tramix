@@ -68,9 +68,13 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8">
-        <h1 className="text-3xl font-bold text-gray-900 text-center mb-6">Crear Cuenta</h1>
+    <div className="min-h-screen flex items-center justify-center bg-brand-bg p-4 relative overflow-hidden">
+      {/* Decorative blobs for auth */}
+      <div className="absolute top-0 left-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+      <div className="absolute bottom-0 right-0 w-64 h-64 bg-brand-secondary/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+
+      <div className="max-w-md w-full bg-white/80 backdrop-blur-md rounded-[2rem] shadow-2xl shadow-brand-primary/5 p-10 border border-white relative z-10">
+        <h1 className="text-3xl font-black text-brand-primary-dark text-center mb-8 tracking-tight">Crear Cuenta</h1>
         
         {success && (
           <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
@@ -90,7 +94,7 @@ export default function RegisterPage() {
             <input
               type="text"
               required
-              className="mt-1 block w-full px-4 py-2 rounded-lg border focus:ring-blue-500 focus:border-blue-500"
+              className={`mt-1 block w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all outline-none border-slate-200`}
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
@@ -128,18 +132,18 @@ export default function RegisterPage() {
               required
               checked={formData.termsAccepted}
               onChange={(e) => setFormData({ ...formData, termsAccepted: e.target.checked })}
-              className="mt-1 h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              className="mt-1 h-5 w-5 text-brand-primary focus:ring-brand-primary border-slate-300 rounded-md cursor-pointer"
             />
-            <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
-              Acepto <button type="button" onClick={() => setShowTerms(true)} className="text-blue-600 underline">términos y condiciones</button> y 
-              <button type="button" onClick={() => setShowTerms(true)} className="text-blue-600 underline ml-1">política de privacidad</button>.
+            <label htmlFor="terms" className="ml-3 block text-sm text-slate-600 font-medium leading-relaxed">
+              Acepto <button type="button" onClick={() => setShowTerms(true)} className="text-brand-primary font-bold hover:underline">términos y condiciones</button> y 
+              <button type="button" onClick={() => setShowTerms(true)} className="text-brand-primary font-bold hover:underline ml-1">política de privacidad</button>.
             </label>
           </div>
 
           <button
             type="submit"
             disabled={!isFormValid}
-            className={`w-full mt-4 text-white font-semibold py-3 rounded-lg transition ${!isFormValid ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}
+            className={`w-full mt-6 text-white font-black py-4 rounded-xl transition-all shadow-lg active:scale-[0.98] ${!isFormValid ? "bg-slate-300 cursor-not-allowed shadow-none" : "bg-brand-primary hover:bg-brand-primary-dark shadow-brand-primary/20"}`}
           >
             Registrarse
           </button>
@@ -160,7 +164,7 @@ export default function RegisterPage() {
               </p>
               <button 
                 onClick={() => setShowTerms(false)}
-                className="w-full bg-blue-600 text-white py-2 rounded"
+                className="w-full bg-brand-primary text-white font-bold py-3 rounded-xl hover:bg-brand-primary-dark transition-all"
               >
                 Cerrar
               </button>

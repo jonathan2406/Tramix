@@ -31,7 +31,7 @@ export default function TramiteClient({ tramite, userAge }: TramiteProps) {
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`flex-1 py-4 px-6 text-sm font-bold min-h-[44px] min-w-[120px] transition capitalize
-                ${activeTab === tab ? 'text-blue-700 bg-blue-50 border-b-2 border-blue-700' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700'}
+                ${activeTab === tab ? 'text-brand-primary bg-brand-primary/10 border-b-2 border-brand-primary' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'}
               `}
             >
               {tab === 'pasos' && "Procedimiento"}
@@ -48,7 +48,7 @@ export default function TramiteClient({ tramite, userAge }: TramiteProps) {
         {activeTab === 'pasos' && (
           <div>
             {tramite.pasos.length === 0 ? (
-              <div className="bg-blue-50 text-blue-800 p-6 rounded-xl border border-blue-200 text-center font-medium">
+              <div className="bg-brand-primary/5 text-brand-primary-dark p-6 rounded-xl border border-brand-primary/10 text-center font-medium">
                 El procedimiento detallado para este trámite se encuentra en construcción o no está disponible actualmente.
               </div>
             ) : (
@@ -59,9 +59,9 @@ export default function TramiteClient({ tramite, userAge }: TramiteProps) {
                     <button
                    key={paso.id}
                    onClick={() => setCurrentStepIndex(idx)}
-                   className={`relative text-left font-bold transition min-h-[44px] ${idx === currentStepIndex ? 'text-blue-700' : 'text-gray-400 hover:text-gray-600'}`}
+                   className={`relative text-left font-bold transition min-h-[44px] ${idx === currentStepIndex ? 'text-brand-primary' : 'text-slate-400 hover:text-slate-600'}`}
                  >
-                   <span className={`absolute -left-[35px] top-1 w-4 h-4 rounded-full border-2 bg-white ${idx === currentStepIndex ? 'border-blue-600' : 'border-gray-300'}`}></span>
+                   <span className={`absolute -left-[35px] top-1 w-4 h-4 rounded-full border-2 bg-white ${idx === currentStepIndex ? 'border-brand-primary' : 'border-slate-300'}`}></span>
                    {`Paso ${idx + 1}`}
                  </button>
                   ))}
@@ -81,7 +81,7 @@ export default function TramiteClient({ tramite, userAge }: TramiteProps) {
                     <button 
                       onClick={() => setCurrentStepIndex(i => Math.min(tramite.pasos.length - 1, i + 1))}
                       disabled={currentStepIndex === tramite.pasos.length - 1}
-                      className="px-6 py-2 bg-blue-600 text-white rounded font-semibold disabled:opacity-50 min-h-[44px] min-w-[44px]"
+                      className="px-8 py-2 bg-brand-primary text-white rounded-xl font-bold hover:bg-brand-primary-dark disabled:opacity-50 min-h-[44px] min-w-[44px] shadow-md transition-all active:scale-95"
                     >Siguiente</button>
                   </div>
                 </div>
@@ -124,9 +124,9 @@ export default function TramiteClient({ tramite, userAge }: TramiteProps) {
         {activeTab === 'puntos' && (
           <div>
             {tramite.isOnline ? (
-              <div className="bg-blue-50 text-blue-800 p-8 rounded-xl border border-blue-200 text-center flex flex-col items-center justify-center">
-                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                   <CheckCircle2 className="w-8 h-8 text-blue-600" />
+              <div className="bg-brand-primary/5 text-brand-primary-dark p-8 rounded-xl border border-brand-primary/10 text-center flex flex-col items-center justify-center">
+                 <div className="w-16 h-16 bg-brand-secondary/20 rounded-full flex items-center justify-center mb-4">
+                   <CheckCircle2 className="w-8 h-8 text-brand-secondary-dark" />
                  </div>
                  <h2 className="text-xl font-bold mb-2">Este trámite es 100% en línea.</h2>
                  <p>No requiere asistencia presencial en ninguna sede.</p>
@@ -147,12 +147,12 @@ export default function TramiteClient({ tramite, userAge }: TramiteProps) {
                     </button>
                     {expandedVenue === punto.id && (
                       <div className="p-6 border-t border-gray-200 flex flex-col gap-4">
-                        <div className="flex items-center gap-3 text-gray-700">
-                           <Clock className="w-5 h-5 text-blue-600" />
+                        <div className="flex items-center gap-3 text-slate-700">
+                           <Clock className="w-5 h-5 text-brand-secondary" />
                            <span className="font-medium">Horario: {punto.schedule}</span>
                         </div>
-                        <div className="flex items-center gap-3 text-gray-700">
-                           <Phone className="w-5 h-5 text-blue-600" />
+                        <div className="flex items-center gap-3 text-slate-700">
+                           <Phone className="w-5 h-5 text-brand-secondary" />
                            <span className="font-medium">Teléfono: {punto.phone}</span>
                         </div>
                       </div>
