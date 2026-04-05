@@ -35,7 +35,7 @@ export default function TramiteClient({ tramite, userAge }: TramiteProps) {
               `}
             >
               {tab === 'pasos' && "Procedimiento"}
-              {tab === 'requisitos' && "Requisitos"}
+              {tab === 'requisitos' && "Requisitos y Documentos"}
               {tab === 'puntos' && "Puntos de Atención"}
               {tab === 'tips' && "Recomendaciones"}
             </button>
@@ -126,9 +126,9 @@ export default function TramiteClient({ tramite, userAge }: TramiteProps) {
             {tramite.isOnline ? (
               <div className="bg-blue-50 text-blue-800 p-8 rounded-xl border border-blue-200 text-center flex flex-col items-center justify-center">
                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                   <AlertCircle className="w-8 h-8 text-blue-600" />
+                   <CheckCircle2 className="w-8 h-8 text-blue-600" />
                  </div>
-                 <h2 className="text-xl font-bold mb-2">Este trámite es 100% en línea</h2>
+                 <h2 className="text-xl font-bold mb-2">Este trámite es 100% en línea.</h2>
                  <p>No requiere asistencia presencial en ninguna sede.</p>
               </div>
             ) : (
@@ -166,24 +166,32 @@ export default function TramiteClient({ tramite, userAge }: TramiteProps) {
 
         {/* HU-11: Recomendaciones y Tips */}
         {activeTab === 'tips' && (
-          <ul className="space-y-4 list-none pl-0">
-             {tramite.recomendaciones.map((rec: any, idx: number) => {
-               const isTargeted = rec.targetAgeRange && rec.targetAgeRange === userAge;
-               return (
-                 <li key={rec.id} className={`p-6 rounded-xl flex gap-4 
-                    ${isTargeted ? 'bg-yellow-50 border-2 border-yellow-400' : 'bg-gray-50 border border-gray-200'}`}
-                 >
-                   <div className="flex-shrink-0 mt-1">
-                     <AlertCircle className={isTargeted ? 'text-yellow-600' : 'text-gray-400'} />
-                   </div>
-                   <div>
-                     {isTargeted && <span className="block text-yellow-800 font-bold text-sm mb-1 uppercase tracking-wide">Tip Personalizado para tu edad</span>}
-                     <p className={isTargeted ? 'text-yellow-900 font-medium' : 'text-gray-700 font-medium'}>{rec.text}</p>
-                   </div>
-                 </li>
-               )
-             })}
-          </ul>
+          <div>
+            {tramite.recomendaciones.length === 0 ? (
+              <div className="bg-gray-50 text-gray-700 p-6 rounded-xl border border-gray-200 text-center font-medium">
+                No hay recomendaciones adicionales registradas.
+              </div>
+            ) : (
+              <ul className="space-y-4 list-none pl-0">
+                {tramite.recomendaciones.map((rec: any, idx: number) => {
+                  const isTargeted = rec.targetAgeRange && rec.targetAgeRange === userAge;
+                  return (
+                    <li key={rec.id} className={`p-6 rounded-xl flex gap-4 
+                       ${isTargeted ? 'bg-yellow-50 border-2 border-yellow-400' : 'bg-gray-50 border border-gray-200'}`}
+                    >
+                      <div className="flex-shrink-0 mt-1">
+                        <AlertCircle className={isTargeted ? 'text-yellow-600' : 'text-gray-400'} />
+                      </div>
+                      <div>
+                        {isTargeted && <span className="block text-yellow-800 font-bold text-sm mb-1 uppercase tracking-wide">Tip personalizado: Atención preferencial disponible para su edad</span>}
+                        <p className={isTargeted ? 'text-yellow-900 font-medium' : 'text-gray-700 font-medium'}>{rec.text}</p>
+                      </div>
+                    </li>
+                  )
+                })}
+              </ul>
+            )}
+          </div>
         )}
       </div>
     </div>

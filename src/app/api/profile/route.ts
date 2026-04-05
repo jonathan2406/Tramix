@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { PrismaClient } from '@prisma/client';
+import { revalidatePath } from 'next/cache';
 
 const prisma = new PrismaClient();
 
@@ -27,10 +28,16 @@ export async function PUT(request: Request) {
      return NextResponse.json({ message: "Todos los campos obligatorios deben estar llenos" }, { status: 400 });
   }
 
-  const updated = await prisma.user.update({
+  const currentUser = await prisma.user.findUnique({ where: { email: session.user.email } });
+  const isFirstTime = currentUser?.profileStatus === "Incompleto";
+
+  await prisma.user.update({
     where: { email: session.user.email },
-    data: { name, surname, documentType, documentNumber, ageRange }
+    data: { name, surname, documentType, documentNumber, ageRange, profileStatus: "Completo" }
   });
 
-  return NextResponse.json({ message: "Datos actualizados correctamente" });
+  revalidatePath('/dashboard');
+
+  const responseMessage = isFirstTime ? "Información guardada exitosamente" : "Datos actualizados correctamente";
+  return NextResponse.json({ message: responseMessage });
 }

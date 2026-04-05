@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -11,6 +11,8 @@ export default function RegisterPage() {
     password: "",
     termsAccepted: false,
   });
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [showTerms, setShowTerms] = useState(false);
@@ -20,20 +22,34 @@ export default function RegisterPage() {
     return pwd.length >= 8 && /[a-zA-Z]/.test(pwd) && /[0-9]/.test(pwd);
   };
 
+  const isValidEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  useEffect(() => {
+    if (formData.email !== "" && !isValidEmail(formData.email)) {
+      setEmailError("Formato de correo inválido");
+    } else {
+      setEmailError("");
+    }
+
+    if (formData.password !== "" && formData.password.length < 8) {
+      setPasswordError("La contraseña debe tener al menos 8 caracteres");
+    } else if (formData.password !== "" && !isValidPassword(formData.password)) {
+      setPasswordError("La contraseña debe ser alfanumérica");
+    } else {
+      setPasswordError("");
+    }
+  }, [formData.email, formData.password]);
+
+  const isFormValid = formData.name !== "" && formData.email !== "" && formData.password !== "" && formData.termsAccepted && !emailError && !passwordError;
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
 
-    if (!isValidPassword(formData.password)) {
-      setError("La contraseña debe tener al menos 8 caracteres, letras y números");
-      return;
-    }
-
-    if (!formData.termsAccepted) {
-      setError("Debes aceptar los términos y condiciones para continuar");
-      return;
-    }
+    if (!isFormValid) return;
 
     const res = await fetch("/api/auth/register", {
       method: "POST",
@@ -45,8 +61,9 @@ export default function RegisterPage() {
       const data = await res.json();
       setError(data.message || "Error al registrar");
     } else {
+      // HU-01: limpia el formulario y muestra una alerta verde
+      setFormData({ name: "", email: "", password: "", termsAccepted: false });
       setSuccess("Registro exitoso. Ahora puedes iniciar sesión");
-      setTimeout(() => router.push("/login"), 2000);
     }
   };
 
@@ -73,7 +90,7 @@ export default function RegisterPage() {
             <input
               type="text"
               required
-              className={`mt-1 block w-full px-4 py-2 rounded-lg border focus:ring-blue-500 focus:border-blue-500`}
+              className="mt-1 block w-full px-4 py-2 rounded-lg border focus:ring-blue-500 focus:border-blue-500"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
@@ -84,10 +101,11 @@ export default function RegisterPage() {
             <input
               type="email"
               required
-              className={`mt-1 block w-full px-4 py-2 rounded-lg border ${error.includes("correo") ? "border-red-500" : "border-gray-300"} focus:ring-blue-500 focus:border-blue-500`}
+              className={`mt-1 block w-full px-4 py-2 rounded-lg border ${emailError ? "border-red-500" : "border-gray-300"} focus:ring-blue-500 focus:border-blue-500`}
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             />
+            {emailError && <p className="text-red-500 text-sm mt-1">{emailError}</p>}
           </div>
 
           <div>
@@ -96,10 +114,11 @@ export default function RegisterPage() {
               type="password"
               required
               title="Mínimo 8 caracteres, al menos 1 letra y 1 número."
-              className={`mt-1 block w-full px-4 py-2 rounded-lg border ${error.includes("contraseña") ? "border-red-500" : "border-gray-300"} focus:ring-blue-500 focus:border-blue-500`}
+              className={`mt-1 block w-full px-4 py-2 rounded-lg border ${passwordError ? "border-red-500" : "border-gray-300"} focus:ring-blue-500 focus:border-blue-500`}
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
             />
+            {passwordError && <p className="text-red-500 text-sm mt-1">{passwordError}</p>}
           </div>
 
           <div className="flex items-start mt-4">
@@ -113,13 +132,14 @@ export default function RegisterPage() {
             />
             <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
               Acepto <button type="button" onClick={() => setShowTerms(true)} className="text-blue-600 underline">términos y condiciones</button> y 
-              política de privacidad.
+              <button type="button" onClick={() => setShowTerms(true)} className="text-blue-600 underline ml-1">política de privacidad</button>.
             </label>
           </div>
 
           <button
             type="submit"
-            className="w-full mt-4 bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition"
+            disabled={!isFormValid}
+            className={`w-full mt-4 text-white font-semibold py-3 rounded-lg transition ${!isFormValid ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}
           >
             Registrarse
           </button>

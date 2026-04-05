@@ -22,8 +22,14 @@ export default function DashboardClient({ categorias, tramites, userAge }: { cat
     return <Icon className="w-8 h-8 mb-2 text-blue-600" />;
   };
 
-  // HU-06: Filtrado por tipo de tramite
-  const filteredTramites = selectedCat ? tramites.filter(t => t.categoriaId === selectedCat) : tramites;
+  // HU-06: Filtrado por tipo de tramite y HU-05: Recomendación por edad
+  let filteredTramites = tramites;
+  if (selectedCat) {
+    filteredTramites = tramites.filter(t => t.categoriaId === selectedCat);
+  } else if (userAge) {
+    // Algoritmo de recomendación: Muestra trámites para este rango de edad o generales
+    filteredTramites = tramites.filter(t => !t.targetAgeRange || t.targetAgeRange === userAge);
+  }
   const isCategoryEmpty = selectedCat && filteredTramites.length === 0;
 
   // HU-07: Consulta por código
@@ -31,7 +37,7 @@ export default function DashboardClient({ categorias, tramites, userAge }: { cat
     e.preventDefault();
     setSearchError("");
     if (!searchCode.trim()) {
-      setSearchError("Debes ingresar un código para realizar la búsqueda");
+      setSearchError("Debes ingresar un código para realizar la búsqueda.");
       return;
     }
 
@@ -111,7 +117,7 @@ export default function DashboardClient({ categorias, tramites, userAge }: { cat
                <FileX className="w-16 h-16 text-gray-300" />
             </div>
             <h3 className="text-lg font-bold text-gray-900">Sin trámites</h3>
-            <p className="text-gray-500 mt-2 max-w-md mx-auto">Por el momento no hay trámites disponibles en esta categoría.</p>
+            <p className="text-gray-500 mt-2 max-w-md mx-auto">Por el momento no hay trámites disponibles en esta categoría</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

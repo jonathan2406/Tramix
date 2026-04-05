@@ -18,10 +18,14 @@ model User {
   surname         String?
   email           String    @unique
   password        String?
+  googleId        String?
   documentType    String?
   documentNumber  String?
   ageRange        String?
+  status          String    @default("Activo")
+  profileStatus   String    @default("Incompleto")
   termsAcceptedAt DateTime?
+  termsVersion    String?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 }

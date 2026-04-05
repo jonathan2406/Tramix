@@ -69,8 +69,15 @@ export const authOptions: NextAuthOptions = {
             data: {
               email: user.email,
               name: user.name || "Usuario Google",
+              googleId: account.providerAccountId,
               // password is null
             }
+          });
+        } else if (!existingUser.googleId) {
+          // HU-02: Match de cuenta - Asocia ID del proveedor externo a la cuenta local
+          await prisma.user.update({
+            where: { email: user.email },
+            data: { googleId: account.providerAccountId }
           });
         }
         return true;

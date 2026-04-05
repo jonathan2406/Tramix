@@ -32,7 +32,9 @@ export async function POST(request: Request) {
         name,
         email,
         password: hashedPassword,
+        status: "Activo",
         termsAcceptedAt: new Date(), // HU-03 Audit Timestamp
+        termsVersion: "v1.0", // HU-03 Audit Version
       }
     });
 
