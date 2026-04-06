@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle2, Circle, MapPin, Clock, Phone, AlertCircle, FileText, ChevronDown, ChevronUp } from "lucide-react";
+import { CheckCircle2, Circle, MapPin, Clock, Phone, AlertCircle, FileText, ChevronDown, ChevronUp, ShieldCheck, ExternalLink } from "lucide-react";
 
 type TramiteProps = {
   tramite: any; // Using any to simplify MVP, in prod use exact Prisma relation type
@@ -20,6 +20,25 @@ export default function TramiteClient({ tramite, userAge }: TramiteProps) {
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
       
+      {/* HEADER CON ENLACE EXTERNO SI EXISTE */}
+      {tramite.externalLink && (
+        <div className="bg-brand-secondary/10 p-4 border-b border-brand-secondary/20 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-brand-secondary-dark font-bold text-sm uppercase tracking-wider">
+            <ShieldCheck className="w-5 h-5" />
+            Acceso Directo Oficial
+          </div>
+          <a 
+            href={tramite.externalLink} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="bg-brand-secondary text-brand-primary-dark font-bold px-6 py-2 rounded-xl hover:bg-brand-secondary-dark transition-all shadow-sm hover:shadow-md flex items-center gap-2 text-sm"
+          >
+            Consultar Estado de Documento en Registraduría
+            <ExternalLink className="w-4 h-4" />
+          </a>
+        </div>
+      )}
+
       {/* TABS HEADER */}
       <div className="flex border-b border-gray-200 overflow-x-auto">
         {['pasos', 'requisitos', 'puntos', 'tips'].map((tab) => {

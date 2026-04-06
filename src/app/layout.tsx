@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   description: "Plataforma digital inteligente para trámites.",
 };
 import Image from "next/image";
+import AccessibilityControls from "@/components/AccessibilityControls";
 
 export default async function RootLayout({
   children,
@@ -59,6 +60,7 @@ export default async function RootLayout({
           <main className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
             {children}
           </main>
+          <AccessibilityControls />
         </Providers>
       </body>
     </html>

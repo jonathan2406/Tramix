@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Search, ChevronRight, FileX } from "lucide-react";
 import * as Icons from "lucide-react";
 import { useRouter } from "next/navigation";
+import PointsOfAttentionSection from "@/components/PointsOfAttentionSection";
+import TipsSection from "@/components/TipsSection";
 
 // Type definitions passed from Server Component
 type Categoria = { id: string; name: string; icon: string };
@@ -138,6 +140,11 @@ export default function DashboardClient({ categorias, tramites, userAge }: { cat
           </div>
         )}
       </section>
+
+      {/* NEW SECTIONS */}
+      <PointsOfAttentionSection />
+      
+      <TipsSection />
     </div>
   );
 }
