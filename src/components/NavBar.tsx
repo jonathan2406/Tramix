@@ -28,7 +28,9 @@ export default function NavBar() {
             ) : session ? (
               <>
                 <Link href="/dashboard" className="hover:text-brand-secondary transition-colors text-sm font-medium">Dashboard</Link>
-                {/* Check role explicitly from session if available, or just render conditional links. For MVP we can render profile and admin will be protected by middleware or page load */}
+                {(session.user as any)?.role === "developer" && (
+                  <Link href="/admin" className="hover:text-brand-secondary transition-colors text-sm font-bold border border-white/20 px-3 py-1 rounded shadow-sm bg-brand-primary-dark/20 text-yellow-300">Admin</Link>
+                )}
                 <Link href="/profile" className="hover:text-brand-secondary transition-colors text-sm font-medium">Mi Perfil</Link>
                 <button onClick={() => signOut({ callbackUrl: '/' })} className="bg-brand-primary-dark/40 px-4 py-2 rounded-xl hover:bg-brand-primary-dark/60 border border-white/10 transition-all text-sm font-semibold">Salir</button>
               </>

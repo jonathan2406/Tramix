@@ -64,7 +64,7 @@ export default function ChatBot() {
       </button>
 
       {/* Ventana de Chat */}
-      <div className={`fixed bottom-6 left-6 z-50 w-80 md:w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-left ${isOpen ? 'scale-100 opacity-100 translate-y-0' : 'scale-0 opacity-0 translate-y-20 pointer-events-none'}`}>
+      <div className={`fixed bottom-6 left-6 z-50 w-80 md:w-96 h-[600px] max-h-[85vh] bg-white rounded-2xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-left ${isOpen ? 'scale-100 opacity-100 translate-y-0' : 'scale-0 opacity-0 translate-y-20 pointer-events-none'}`}>
         
         {/* Header */}
         <div className="bg-brand-primary p-4 flex items-center justify-between">
@@ -78,7 +78,7 @@ export default function ChatBot() {
         </div>
 
         {/* Mensajes */}
-        <div className="flex-1 p-4 h-80 overflow-y-auto space-y-4 bg-slate-50">
+        <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-slate-50 min-h-[50%]">
           {messages.map((m, i) => (
             <div key={i} className={`flex gap-2 max-w-[85%] ${m.role === 'user' ? 'ml-auto flex-row-reverse' : ''}`}>
               <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${m.role === 'user' ? 'bg-brand-secondary text-brand-primary-dark' : 'bg-brand-primary/10 text-brand-primary'}`}>
