@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Type, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
+import { Type, ZoomIn, ZoomOut, RotateCcw, Contrast } from "lucide-react";
 
 export default function AccessibilityControls() {
   const [fontSize, setFontSize] = useState("normal");
   const [zoom, setZoom] = useState(1);
+  const [highContrast, setHighContrast] = useState(false);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -26,9 +27,20 @@ export default function AccessibilityControls() {
     }
   }, [zoom]);
 
+  // HU-15: Alto contraste — alterna atributo en <html>
+  useEffect(() => {
+    const root = document.documentElement;
+    if (highContrast) {
+      root.setAttribute("data-contrast", "high");
+    } else {
+      root.removeAttribute("data-contrast");
+    }
+  }, [highContrast]);
+
   const reset = () => {
     setFontSize("normal");
     setZoom(1);
+    setHighContrast(false);
   };
 
   return (
@@ -82,6 +94,20 @@ export default function AccessibilityControls() {
             <ZoomIn className="w-5 h-5" />
           </button>
         </div>
+
+        {/* HU-15: Toggle Alto Contraste */}
+        <button
+          onClick={() => setHighContrast((prev) => !prev)}
+          className={`w-full py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all ${
+            highContrast
+              ? "bg-gray-900 text-yellow-300 hover:bg-black"
+              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+          }`}
+          title="Alto Contraste"
+        >
+          <Contrast className="w-3.5 h-3.5" />
+          {highContrast ? "Contraste: Alto" : "Alto Contraste"}
+        </button>
 
         <button 
           onClick={reset}

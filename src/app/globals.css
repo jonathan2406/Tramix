@@ -28,3 +28,55 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* HU-15: Modo Alto Contraste */
+[data-contrast="high"] {
+  --background: #000000;
+  --foreground: #ffffff;
+  --brand-bg: #000000;
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+[data-contrast="high"] body {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+[data-contrast="high"] nav {
+  background-color: #000000 !important;
+  border-bottom: 2px solid #ffff00 !important;
+}
+
+[data-contrast="high"] a,
+[data-contrast="high"] button {
+  color: #ffff00 !important;
+  border-color: #ffff00 !important;
+}
+
+[data-contrast="high"] .bg-white,
+[data-contrast="high"] .bg-slate-50,
+[data-contrast="high"] .bg-gray-50,
+[data-contrast="high"] .bg-brand-primary\/5,
+[data-contrast="high"] .bg-brand-primary\/10 {
+  background-color: #111111 !important;
+  border-color: #ffff00 !important;
+}
+
+[data-contrast="high"] h1,
+[data-contrast="high"] h2,
+[data-contrast="high"] h3,
+[data-contrast="high"] p,
+[data-contrast="high"] span,
+[data-contrast="high"] label {
+  color: #ffffff !important;
+}
+
+[data-contrast="high"] input,
+[data-contrast="high"] select,
+[data-contrast="high"] textarea {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+  border: 2px solid #ffff00 !important;
+}
+

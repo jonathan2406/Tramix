@@ -10,10 +10,11 @@ import TipsSection from "@/components/TipsSection";
 
 // Type definitions passed from Server Component
 type Categoria = { id: string; name: string; icon: string };
-type Tramite = { id: string; title: string; description: string; code: string; categoriaId: string | null; isOnline: boolean; targetAgeRange: string | null };
+type Tramite = { id: string; title: string; description: string; code: string; categoriaId: string | null; isOnline: boolean; targetAgeRange: string | null; type: string };
 
-export default function DashboardClient({ categorias, tramites, userAge }: { categorias: Categoria[], tramites: Tramite[], userAge: string | null | undefined }) {
+export default function DashboardClient({ categorias, tramites, userAge, puntosAtencion }: { categorias: Categoria[], tramites: Tramite[], userAge: string | null | undefined, puntosAtencion?: any[] }) {
   const [selectedCat, setSelectedCat] = useState<string | null>(null);
+  const [typeFilter, setTypeFilter] = useState<"todos" | "ciudadano" | "financiero">("todos"); // HU-16
   const [searchCode, setSearchCode] = useState("");
   const [searchError, setSearchError] = useState("");
   const router = useRouter();
@@ -24,15 +25,21 @@ export default function DashboardClient({ categorias, tramites, userAge }: { cat
     return <Icon className="w-8 h-8 mb-2 text-brand-primary" />;
   };
 
-  // HU-06: Filtrado por tipo de tramite y HU-05: Recomendación por edad
+  // HU-06: Filtrado por categoría y HU-05: Recomendación por edad
   let filteredTramites = tramites;
   if (selectedCat) {
     filteredTramites = tramites.filter(t => t.categoriaId === selectedCat);
   } else if (userAge) {
-    // Algoritmo de recomendación: Muestra trámites para este rango de edad o generales
     filteredTramites = tramites.filter(t => !t.targetAgeRange || t.targetAgeRange === userAge);
   }
-  const isCategoryEmpty = selectedCat && filteredTramites.length === 0;
+
+  // HU-16: Filtrar por tipo ciudadano / financiero
+  if (typeFilter !== "todos") {
+    filteredTramites = filteredTramites.filter(t => t.type === typeFilter);
+  }
+
+  const isCategoryEmpty = (selectedCat || typeFilter !== "todos") && filteredTramites.length === 0;
+
 
   // HU-07: Consulta por código
   const handleSearch = (e: React.FormEvent) => {
@@ -79,6 +86,22 @@ export default function DashboardClient({ categorias, tramites, userAge }: { cat
           </div>
         )}
       </div>
+
+      {/* HU-16: Filtro Tipo de Trámite */}
+      <section>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Filtrar por Tipo</h2>
+        <div className="flex gap-4">
+          {(["todos", "ciudadano", "financiero"] as const).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTypeFilter(t)}
+              className={`px-6 py-2.5 rounded-xl font-bold text-sm capitalize transition ${typeFilter === t ? "bg-brand-secondary text-brand-primary-dark shadow-md" : "bg-white border-2 border-gray-100 text-gray-500 hover:border-gray-300"}`}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+      </section>
 
       {/* HU-06 Categories Grid */}
       <section>
@@ -142,7 +165,7 @@ export default function DashboardClient({ categorias, tramites, userAge }: { cat
       </section>
 
       {/* NEW SECTIONS */}
-      <PointsOfAttentionSection />
+      <PointsOfAttentionSection puntos={puntosAtencion} />
       
       <TipsSection />
     </div>

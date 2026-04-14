@@ -151,8 +151,8 @@ export default function TramiteClient({ tramite, userAge }: TramiteProps) {
                  <p>No requiere asistencia presencial en ninguna sede.</p>
               </div>
             ) : (
-              <div className="space-y-4">
-                {tramite.puntosAtencion.map((punto: any) => (
+               <div className="space-y-4">
+                {tramite.puntosAtencion.filter((p: any) => !p.status || p.status === "activo").map((punto: any) => (
                   <div key={punto.id} className="border border-gray-200 rounded-xl overflow-hidden bg-gray-50">
                     <button 
                       onClick={() => toggleVenue(punto.id)}

@@ -22,6 +22,7 @@ model User {
   documentType    String?
   documentNumber  String?
   ageRange        String?
+  role            String    @default("user")
   status          String    @default("Activo")
   profileStatus   String    @default("Incompleto")
   termsAcceptedAt DateTime?
@@ -43,6 +44,10 @@ model Tramite {
   description      String
   code             String            @unique
   isOnline         Boolean           @default(false)
+  published        Boolean           @default(true)
+  type             String            @default("ciudadano")
+  estimatedTime    String?
+  estimatedCost    String?
   targetAgeRange   String? 
   categoriaId      String?
   categoria        Categoria?        @relation(fields: [categoriaId], references: [id])
@@ -76,6 +81,7 @@ model PuntoAtencion {
   address   String
   schedule  String
   phone     String
+  status    String   @default("activo")
   tramiteId String
   tramite   Tramite  @relation(fields: [tramiteId], references: [id], onDelete: Cascade)
 }

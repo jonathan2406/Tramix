@@ -20,7 +20,15 @@ export default async function DashboardPage() {
 
   const categorias = await prisma.categoria.findMany();
   const tramites = await prisma.tramite.findMany({
+    // @ts-ignore: type will be updated post-generate
+    where: { published: true },
     include: { categoria: true }
+  });
+  
+  const puntosAtencion = await prisma.puntoAtencion.findMany({
+    // @ts-ignore: type will be updated post-generate
+    where: { status: "activo" },
+    include: { tramite: { select: { title: true, categoria: { select: { name: true } } } } }
   });
 
   return (
@@ -30,7 +38,7 @@ export default async function DashboardPage() {
         <p className="text-gray-500 mt-2">Bienvenido a TRAMIX. Encuentra y gestiona tus trámites rápidamente.</p>
       </div>
 
-      <DashboardClient categorias={categorias} tramites={tramites} userAge={user?.ageRange} />
+      <DashboardClient categorias={categorias} tramites={tramites as any} userAge={user?.ageRange} puntosAtencion={puntosAtencion as any} />
     </div>
   );
 }
