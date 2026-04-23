@@ -1,10 +1,8 @@
-import { PrismaClient } from '@prisma/client';
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { notFound } from "next/navigation";
+import prisma from "@/lib/prisma";
 import TramiteClient from "./TramiteClient";
-
-const prisma = new PrismaClient();
 
 export default async function TramitePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

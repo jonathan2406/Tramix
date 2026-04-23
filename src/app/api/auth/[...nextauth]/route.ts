@@ -1,10 +1,8 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
-
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
 
 export const authOptions: NextAuthOptions = {
   // Not using PrismaAdapter for standard NextAuth because we have a custom user schema 
