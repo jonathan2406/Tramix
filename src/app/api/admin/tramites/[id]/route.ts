@@ -10,7 +10,7 @@ async function requireDeveloper() {
   if (!session?.user?.email) return null;
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
-    select: { role: true },
+    select: { id: true, role: true },
   });
   return user?.role === "developer" ? user : null;
 }
@@ -36,6 +36,16 @@ export async function PUT(
       ...(estimatedCost !== undefined && { estimatedCost }),
       ...(type !== undefined && { type }),
       ...(published !== undefined && { published }),
+    },
+  });
+
+  const action = published !== undefined ? (published ? "PUBLICACION" : "DESPUBLICACION") : "ACTUALIZACION";
+  await prisma.historialTramite.create({
+    data: {
+      tramiteId: id,
+      userId: dev.id,
+      action,
+      changes: JSON.stringify(body),
     },
   });
 

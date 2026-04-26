@@ -25,8 +25,7 @@ export default function PointsOfAttentionSection({ puntos }: { puntos?: Punto[] 
     
     const groups: Record<string, any> = {};
     puntos.forEach(p => {
-      // HU-14: Solo mostrar activos (ya filtrado en query, pero asegurando por las dudas)
-      if (p.status !== "activo") return;
+      // HU-14: puntos fuera de servicio se muestran atenuados; no se filtran
       
       const catName = p.tramite?.categoria?.name || "Otros";
       if (!groups[catName]) {
@@ -41,7 +40,8 @@ export default function PointsOfAttentionSection({ puntos }: { puntos?: Punto[] 
         name: p.tramite.title,
         address: p.address,
         phone: p.phone,
-        schedule: p.schedule
+        schedule: p.schedule,
+        status: p.status
       });
     });
     return Object.values(groups);
@@ -53,7 +53,8 @@ export default function PointsOfAttentionSection({ puntos }: { puntos?: Punto[] 
     }
   }, [groupedData, activeFilter]);
 
-  if (!puntos || puntos.length === 0 || groupedData.length === 0) return null;
+  if (!puntos || puntos.length === 0) return null;
+  if (groupedData.length === 0) return null;
 
   const filtered = activeFilter === "Todos" 
     ? groupedData[0] 
@@ -87,28 +88,36 @@ export default function PointsOfAttentionSection({ puntos }: { puntos?: Punto[] 
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-500">
-        {filtered?.centers.map((center: any, idx: number) => (
-          <div key={idx} className="bg-slate-50 rounded-2xl p-6 border border-slate-100 hover:border-brand-primary/20 transition-all group hover:bg-white hover:shadow-xl">
-            <h3 className="font-bold text-brand-primary-dark mb-4 group-hover:text-brand-primary transition-colors flex items-center justify-between text-sm">
-              {center.name}
-              <Navigation className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all text-brand-secondary" />
-            </h3>
-            <div className="space-y-3">
-              <div className="flex gap-3 text-sm text-slate-600">
-                <MapPin className="w-4 h-4 text-brand-secondary flex-shrink-0" />
-                <span>{center.address}</span>
-              </div>
-              <div className="flex gap-3 text-sm text-slate-600">
-                <Clock className="w-4 h-4 text-brand-secondary flex-shrink-0" />
-                <span>{center.schedule}</span>
-              </div>
-              <div className="flex gap-3 text-sm text-slate-600">
-                <Phone className="w-4 h-4 text-brand-secondary flex-shrink-0" />
-                <span>{center.phone}</span>
+        {filtered?.centers.map((center: any, idx: number) => {
+          const isInactive = center.status !== "activo";
+          return (
+            <div key={idx} className={`relative bg-slate-50 rounded-2xl p-6 border border-slate-100 hover:border-brand-primary/20 transition-all group hover:bg-white hover:shadow-xl ${isInactive ? "opacity-60 grayscale hover:opacity-100 hover:grayscale-0" : ""}`}>
+              {isInactive && (
+                <div className="absolute top-4 right-4 bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold border border-red-200 shadow-sm z-10">
+                  Fuera de Servicio
+                </div>
+              )}
+              <h3 className={`font-bold mb-4 flex items-center justify-between text-sm pr-20 ${isInactive ? "text-slate-500" : "text-brand-primary-dark group-hover:text-brand-primary transition-colors"}`}>
+                {center.name}
+                <Navigation className={`w-4 h-4 opacity-0 group-hover:opacity-100 transition-all ${isInactive ? "text-slate-400" : "text-brand-secondary"}`} />
+              </h3>
+              <div className="space-y-3">
+                <div className="flex gap-3 text-sm text-slate-600">
+                  <MapPin className={`w-4 h-4 flex-shrink-0 ${isInactive ? "text-slate-400" : "text-brand-secondary"}`} />
+                  <span>{center.address}</span>
+                </div>
+                <div className="flex gap-3 text-sm text-slate-600">
+                  <Clock className={`w-4 h-4 flex-shrink-0 ${isInactive ? "text-slate-400" : "text-brand-secondary"}`} />
+                  <span>{center.schedule}</span>
+                </div>
+                <div className="flex gap-3 text-sm text-slate-600">
+                  <Phone className={`w-4 h-4 flex-shrink-0 ${isInactive ? "text-slate-400" : "text-brand-secondary"}`} />
+                  <span>{center.phone}</span>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

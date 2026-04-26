@@ -12,7 +12,7 @@ export default async function AdminPage() {
 
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
-    select: { role: true, name: true },
+    select: { id: true, role: true, name: true },
   });
 
   if (user?.role !== "developer") redirect("/dashboard");
@@ -27,6 +27,11 @@ export default async function AdminPage() {
     orderBy: { tramiteId: "asc" },
   });
 
+  const users = await prisma.user.findMany({
+    select: { id: true, name: true, email: true, role: true, documentNumber: true, createdAt: true },
+    orderBy: { createdAt: "desc" },
+  });
+
   const tramitesList = tramites.map((t) => ({ id: t.id, title: t.title }));
 
   return (
@@ -35,7 +40,7 @@ export default async function AdminPage() {
         <h1 className="text-3xl font-bold text-gray-900">Panel de Administración</h1>
         <p className="text-gray-500 mt-2">Desarrollador: {user?.name}. Gestiona trámites y puntos de atención.</p>
       </div>
-      <AdminClient tramites={tramites as any} puntos={allPuntos as any} tramitesList={tramitesList} />
+      <AdminClient tramites={tramites as any} puntos={allPuntos as any} tramitesList={tramitesList} users={users as any} currentUserId={user.id} />
     </div>
   );
 }

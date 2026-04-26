@@ -29,6 +29,7 @@ model User {
   termsVersion    String?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+  historial       HistorialTramite[]
 }
 
 model Categoria {
@@ -58,6 +59,7 @@ model Tramite {
   externalLink     String?
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
+  historial        HistorialTramite[]
 }
 
 model Paso {
@@ -79,6 +81,7 @@ model Requisito {
 model PuntoAtencion {
   id        String   @id @default(cuid())
   address   String
+  city      String   @default("Bogotá")
   schedule  String
   phone     String
   status    String   @default("activo")
@@ -92,4 +95,16 @@ model Recomendacion {
   targetAgeRange String?
   tramiteId      String
   tramite        Tramite @relation(fields: [tramiteId], references: [id], onDelete: Cascade)
+}
+
+model HistorialTramite {
+  id          String   @id @default(cuid())
+  tramiteId   String
+  userId      String
+  action      String   // e.g., "ACTUALIZACION", "DESPUBLICACION", "PUBLICACION"
+  changes     String?  // Could be a JSON string describing what changed
+  createdAt   DateTime @default(now())
+  
+  tramite     Tramite  @relation(fields: [tramiteId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

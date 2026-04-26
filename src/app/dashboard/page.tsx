@@ -20,14 +20,11 @@ export default async function DashboardPage() {
 
   const categorias = await prisma.categoria.findMany();
   const tramites = await prisma.tramite.findMany({
-    // @ts-ignore: type will be updated post-generate
     where: { published: true },
     include: { categoria: true }
   });
   
   const puntosAtencion = await prisma.puntoAtencion.findMany({
-    // @ts-ignore: type will be updated post-generate
-    where: { status: "activo" },
     include: { tramite: { select: { title: true, categoria: { select: { name: true } } } } }
   });
 

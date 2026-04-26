@@ -10,26 +10,35 @@ async function requireDeveloper() {
   if (!session?.user?.email) return null;
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
-    select: { role: true },
+    select: { id: true, role: true },
   });
   return user?.role === "developer" ? user : null;
 }
 
-// HU-14: Crear nuevo punto de atención
-export async function POST(req: NextRequest) {
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const dev = await requireDeveloper();
   if (!dev) return NextResponse.json({ error: "No autorizado" }, { status: 403 });
 
+  const { id } = await params;
   const body = await req.json();
-  const { address, city, schedule, phone, tramiteId, status } = body;
+  const { role } = body;
 
-  if (!address || !city || !schedule || !phone || !tramiteId) {
-    return NextResponse.json({ error: "Faltan campos requeridos" }, { status: 400 });
+  if (!role) {
+    return NextResponse.json({ error: "Falta el rol" }, { status: 400 });
   }
 
-  const punto = await prisma.puntoAtencion.create({
-    data: { address, city, schedule, phone, tramiteId, status: status ?? "activo" },
+  // Prevención de auto-bloqueo
+  if (dev.id === id) {
+    return NextResponse.json({ error: "Por seguridad, no puedes eliminar tu propio rol administrativo" }, { status: 403 });
+  }
+
+  const updatedUser = await prisma.user.update({
+    where: { id },
+    data: { role },
   });
 
-  return NextResponse.json(punto, { status: 201 });
+  return NextResponse.json({ id: updatedUser.id, role: updatedUser.role });
 }
