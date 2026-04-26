@@ -28,7 +28,7 @@ export default function NavBar() {
             ) : session ? (
               <>
                 <Link href="/dashboard" className="hover:text-brand-secondary transition-colors text-sm font-medium">Dashboard</Link>
-                {(session.user as any)?.role === "developer" && (
+                {((session.user as any)?.role === "developer" || (session.user as any)?.role === "funcionario") && (
                   <Link href="/admin" className="hover:text-brand-secondary transition-colors text-sm font-bold border border-white/20 px-3 py-1 rounded shadow-sm bg-brand-primary-dark/20 text-yellow-300">Admin</Link>
                 )}
                 <Link href="/profile" className="hover:text-brand-secondary transition-colors text-sm font-medium">Mi Perfil</Link>

@@ -15,7 +15,7 @@ export default async function AdminPage() {
     select: { id: true, role: true, name: true },
   });
 
-  if (user?.role !== "developer") redirect("/dashboard");
+  if (user?.role !== "developer" && user?.role !== "funcionario") redirect("/dashboard");
 
   const tramites = await prisma.tramite.findMany({
     include: { categoria: true, puntosAtencion: true },
@@ -38,9 +38,9 @@ export default async function AdminPage() {
     <div className="space-y-6">
       <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
         <h1 className="text-3xl font-bold text-gray-900">Panel de Administración</h1>
-        <p className="text-gray-500 mt-2">Desarrollador: {user?.name}. Gestiona trámites y puntos de atención.</p>
+        <p className="text-gray-500 mt-2">{user?.role === 'developer' ? 'Desarrollador' : 'Funcionario'}: {user?.name}. Gestiona trámites y puntos de atención.</p>
       </div>
-      <AdminClient tramites={tramites as any} puntos={allPuntos as any} tramitesList={tramitesList} users={users as any} currentUserId={user.id} />
+      <AdminClient tramites={tramites as any} puntos={allPuntos as any} tramitesList={tramitesList} users={users as any} currentUserId={user.id} currentUserRole={user.role} />
     </div>
   );
 }

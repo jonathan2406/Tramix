@@ -23,9 +23,10 @@ type Props = {
   tramitesList: { id: string; title: string }[];
   users?: User[];
   currentUserId?: string;
+  currentUserRole?: string;
 };
 
-export default function AdminClient({ tramites: initialTramites, puntos: initialPuntos, tramitesList, users: initialUsers = [], currentUserId }: Props) {
+export default function AdminClient({ tramites: initialTramites, puntos: initialPuntos, tramitesList, users: initialUsers = [], currentUserId, currentUserRole }: Props) {
   const [tab, setTab] = useState<"tramites" | "puntos" | "usuarios" | "estadisticas">("tramites");
   const [tramites, setTramites] = useState(initialTramites);
   const [puntos, setPuntos] = useState(initialPuntos);
@@ -197,7 +198,9 @@ export default function AdminClient({ tramites: initialTramites, puntos: initial
     <div className="space-y-6">
       {/* Tabs */}
       <div className="flex gap-2 bg-white p-2 rounded-2xl shadow-sm border border-gray-100 overflow-x-auto no-scrollbar">
-        {(["tramites", "puntos", "usuarios", "estadisticas"] as const).map((t) => (
+        {(["tramites", "puntos", "usuarios", "estadisticas"] as const)
+          .filter(t => t !== 'usuarios' || currentUserRole === 'developer')
+          .map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -394,7 +397,7 @@ export default function AdminClient({ tramites: initialTramites, puntos: initial
       )}
 
       {/* HU-16: Gestión de Usuarios */}
-      {tab === "usuarios" && (
+      {tab === "usuarios" && currentUserRole === 'developer' && (
         <div className="space-y-4">
           <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex gap-3 text-sm text-blue-800">
             <ShieldAlert className="w-5 h-5 flex-shrink-0 text-blue-600 mt-0.5" />
