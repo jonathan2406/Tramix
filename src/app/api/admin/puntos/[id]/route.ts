@@ -5,14 +5,14 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 const prisma = new PrismaClient();
 
-async function requireDeveloper() {
+async function requireStaff() {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) return null;
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
     select: { role: true },
   });
-  return user?.role === "developer" ? user : null;
+  return (user?.role === "developer" || user?.role === "funcionario") ? user : null;
 }
 
 // HU-14: Actualizar estado de un punto de atención
@@ -20,8 +20,8 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const dev = await requireDeveloper();
-  if (!dev) return NextResponse.json({ error: "No autorizado" }, { status: 403 });
+  const staff = await requireStaff();
+  if (!staff) return NextResponse.json({ error: "No autorizado" }, { status: 403 });
 
   const { id } = await params;
   const { status } = await req.json();
@@ -39,8 +39,8 @@ export async function DELETE(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const dev = await requireDeveloper();
-  if (!dev) return NextResponse.json({ error: "No autorizado" }, { status: 403 });
+  const staff = await requireStaff();
+  if (!staff) return NextResponse.json({ error: "No autorizado" }, { status: 403 });
 
   const { id } = await params;
   await prisma.puntoAtencion.delete({ where: { id } });

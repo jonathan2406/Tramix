@@ -5,14 +5,14 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 const prisma = new PrismaClient();
 
-async function requireDeveloper() {
+async function requireStaff() {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) return null;
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
     select: { id: true, role: true },
   });
-  return user?.role === "developer" ? user : null;
+  return (user?.role === "developer" || user?.role === "funcionario") ? user : null;
 }
 
 // HU-13: Actualizar campos de un trámite (y despublicar)
@@ -20,8 +20,8 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const dev = await requireDeveloper();
-  if (!dev) return NextResponse.json({ error: "No autorizado" }, { status: 403 });
+  const staff = await requireStaff();
+  if (!staff) return NextResponse.json({ error: "No autorizado" }, { status: 403 });
 
   const { id } = await params;
   const body = await req.json();
@@ -43,7 +43,7 @@ export async function PUT(
   await prisma.historialTramite.create({
     data: {
       tramiteId: id,
-      userId: dev.id,
+      userId: staff.id,
       action,
       changes: JSON.stringify(body),
     },
