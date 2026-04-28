@@ -57,10 +57,13 @@ body {
 [data-contrast="high"] .bg-white,
 [data-contrast="high"] .bg-slate-50,
 [data-contrast="high"] .bg-gray-50,
+[data-contrast="high"] .bg-brand-primary,
+[data-contrast="high"] .bg-brand-secondary,
 [data-contrast="high"] .bg-brand-primary\/5,
 [data-contrast="high"] .bg-brand-primary\/10 {
   background-color: #111111 !important;
-  border-color: #ffff00 !important;
+  border: 2px solid #ffff00 !important;
+  color: #ffffff !important;
 }
 
 [data-contrast="high"] h1,
@@ -68,6 +71,7 @@ body {
 [data-contrast="high"] h3,
 [data-contrast="high"] p,
 [data-contrast="high"] span,
+[data-contrast="high"] div,
 [data-contrast="high"] label {
   color: #ffffff !important;
 }
@@ -78,5 +82,10 @@ body {
   background-color: #1a1a1a !important;
   color: #ffffff !important;
   border: 2px solid #ffff00 !important;
+}
+
+/* Fix para los iconos en alto contraste */
+[data-contrast="high"] svg {
+  color: inherit !important;
 }
 
