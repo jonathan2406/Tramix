@@ -14,23 +14,25 @@ datasource db {
 }
 
 model User {
-  id              String    @id @default(cuid())
-  name            String
-  surname         String?
-  email           String    @unique
-  password        String?
-  googleId        String?
-  documentType    String?
-  documentNumber  String?
-  ageRange        String?
-  role            String    @default("user")
-  status          String    @default("Activo")
-  profileStatus   String    @default("Incompleto")
-  termsAcceptedAt DateTime?
-  termsVersion    String?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  historial       HistorialTramite[]
+  id                String    @id @default(cuid())
+  name              String
+  surname           String?
+  email             String    @unique
+  password          String?
+  googleId          String?
+  documentType      String?
+  documentNumber    String?
+  ageRange          String?
+  preferredLanguage String    @default("es")
+  role              String    @default("user")
+  status            String    @default("Activo")
+  profileStatus     String    @default("Incompleto")
+  termsAcceptedAt   DateTime?
+  termsVersion      String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  historial         HistorialTramite[]
+  favoritos         Favorito[]
 }
 
 model Categoria {
@@ -61,6 +63,7 @@ model Tramite {
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
   historial        HistorialTramite[]
+  favoritos        Favorito[]
 }
 
 model Paso {
@@ -96,6 +99,17 @@ model Recomendacion {
   targetAgeRange String?
   tramiteId      String
   tramite        Tramite @relation(fields: [tramiteId], references: [id], onDelete: Cascade)
+}
+
+model Favorito {
+  id         String   @id @default(cuid())
+  userId     String
+  tramiteId  String
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tramite    Tramite  @relation(fields: [tramiteId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tramiteId])
 }
 
 model HistorialTramite {

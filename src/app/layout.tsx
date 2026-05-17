@@ -16,6 +16,7 @@ import NavBar from "@/components/NavBar";
 import Image from "next/image";
 import AccessibilityControls from "@/components/AccessibilityControls";
 import ChatBot from "@/components/ChatBot";
+import { LanguageProvider } from "@/components/LanguageContext";
 
 export default function RootLayout({
   children,
@@ -26,12 +27,14 @@ export default function RootLayout({
     <html lang="es" className="scroll-smooth">
       <body className={`${inter.className} bg-brand-bg antialiased`} suppressHydrationWarning>
         <Providers>
-          <NavBar />
-          <main className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-            {children}
-          </main>
-          <AccessibilityControls />
-          <ChatBot />
+          <LanguageProvider>
+            <NavBar />
+            <main className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+              {children}
+            </main>
+            <AccessibilityControls />
+            <ChatBot />
+          </LanguageProvider>
         </Providers>
       </body>
     </html>
