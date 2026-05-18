@@ -4,9 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import {
   CheckCircle2, Circle, MapPin, Clock, Phone, AlertCircle, FileText,
   ChevronDown, ChevronUp, ShieldCheck, ExternalLink,
-  Volume2, VolumeX, Pause, Play, Square,
+  Volume2, Pause, Play, Square,
   Heart, HeartOff, Calendar, X
 } from "lucide-react";
+import { useLanguage } from "@/components/LanguageContext";
 
 type TramiteProps = {
   tramite: any;
@@ -36,6 +37,7 @@ function getTabText(tramite: any, activeTab: string, userAge?: string | null): s
 }
 
 export default function TramiteClient({ tramite, userAge, isFavorite: initialFavorite = false, tramiteId = "" }: TramiteProps) {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState("pasos");
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [checkedReqs, setCheckedReqs] = useState<Record<string, boolean>>({});
@@ -44,32 +46,58 @@ export default function TramiteClient({ tramite, userAge, isFavorite: initialFav
   // ─── HU-27: TTS state ──────────────────────────────────────────────────────
   const [ttsActive, setTtsActive] = useState(false);
   const [ttsPaused, setTtsPaused] = useState(false);
+  const [ttsError, setTtsError] = useState<string | null>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
+  const uttRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined") synthRef.current = window.speechSynthesis;
+    synthRef.current = typeof window !== "undefined" && "speechSynthesis" in window
+      ? window.speechSynthesis
+      : null;
     return () => { synthRef.current?.cancel(); };
   }, []);
 
-  // Cancelar lectura al cambiar de pestaña
   useEffect(() => {
     synthRef.current?.cancel();
     setTtsActive(false);
     setTtsPaused(false);
+    setTtsError(null);
   }, [activeTab]);
 
   function ttsStart() {
-    if (!synthRef.current) return;
-    synthRef.current.cancel();
+    setTtsError(null);
+
+    if (!synthRef.current) {
+      setTtsError("Tu navegador no soporta lectura en voz alta.");
+      return;
+    }
+
     const text = getTabText(tramite, activeTab, userAge);
     if (!text) return;
-    const utt = new SpeechSynthesisUtterance(text);
-    utt.lang = "es-CO";
-    utt.onend = () => { setTtsActive(false); setTtsPaused(false); };
-    utt.onerror = () => { setTtsActive(false); setTtsPaused(false); };
-    synthRef.current.speak(utt);
-    setTtsActive(true);
-    setTtsPaused(false);
+
+    synthRef.current.cancel();
+
+    // Chrome bug: speak() inmediatamente después de cancel() a veces falla
+    setTimeout(() => {
+      const utt = new SpeechSynthesisUtterance(text);
+      // No forzar locale — el navegador usa la voz disponible en español
+      // es-CO no existe en la mayoría de sistemas; usar "es" es más compatible
+      utt.lang = "es";
+      utt.rate = 0.95;
+      utt.onend = () => { setTtsActive(false); setTtsPaused(false); };
+      utt.onerror = (e) => {
+        // "interrupted" es normal cuando el usuario detiene manualmente
+        if (e.error !== "interrupted" && e.error !== "canceled") {
+          setTtsError("No se pudo iniciar la lectura. Verifica que tu dispositivo tenga voces instaladas.");
+        }
+        setTtsActive(false);
+        setTtsPaused(false);
+      };
+      uttRef.current = utt;
+      synthRef.current!.speak(utt);
+      setTtsActive(true);
+      setTtsPaused(false);
+    }, 150);
   }
 
   function ttsPause() {
@@ -234,28 +262,33 @@ export default function TramiteClient({ tramite, userAge, isFavorite: initialFav
       {/* BARRA DE ACCIONES: TTS + Favorito + Calendario */}
       <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-b border-gray-100 bg-gray-50/50">
         {/* HU-27: Controles TTS */}
-        <div className="flex items-center gap-2">
-          {!ttsActive ? (
-            <button onClick={ttsStart} title="Leer en voz alta"
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-primary text-white text-xs font-bold hover:bg-brand-primary-dark transition-all min-h-[36px]">
-              <Volume2 className="w-4 h-4" /> Escuchar sección
-            </button>
-          ) : (
-            <div className="flex items-center gap-2">
-              {ttsPaused ? (
-                <button onClick={ttsResume} title="Reanudar" className="p-2 rounded-xl bg-brand-primary text-white hover:bg-brand-primary-dark transition-all">
-                  <Play className="w-4 h-4" />
-                </button>
-              ) : (
-                <button onClick={ttsPause} title="Pausar" className="p-2 rounded-xl bg-amber-500 text-white hover:bg-amber-600 transition-all">
-                  <Pause className="w-4 h-4" />
-                </button>
-              )}
-              <button onClick={ttsStop} title="Detener" className="p-2 rounded-xl bg-red-500 text-white hover:bg-red-600 transition-all">
-                <Square className="w-4 h-4" />
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2">
+            {!ttsActive ? (
+              <button onClick={ttsStart} title="Leer en voz alta"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-primary text-white text-xs font-bold hover:bg-brand-primary-dark transition-all min-h-[36px]">
+                <Volume2 className="w-4 h-4" /> {t.tramite.listenSection}
               </button>
-              <span className="text-xs text-gray-500 font-medium">{ttsPaused ? "Pausado" : "Leyendo..."}</span>
-            </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                {ttsPaused ? (
+                  <button onClick={ttsResume} title="Reanudar" className="p-2 rounded-xl bg-brand-primary text-white hover:bg-brand-primary-dark transition-all">
+                    <Play className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <button onClick={ttsPause} title="Pausar" className="p-2 rounded-xl bg-amber-500 text-white hover:bg-amber-600 transition-all">
+                    <Pause className="w-4 h-4" />
+                  </button>
+                )}
+                <button onClick={ttsStop} title="Detener" className="p-2 rounded-xl bg-red-500 text-white hover:bg-red-600 transition-all">
+                  <Square className="w-4 h-4" />
+                </button>
+                <span className="text-xs text-gray-500 font-medium">{ttsPaused ? "Pausado" : "Leyendo..."}</span>
+              </div>
+            )}
+          </div>
+          {ttsError && (
+            <p className="text-xs text-red-600 max-w-[280px]">{ttsError}</p>
           )}
         </div>
 
@@ -270,7 +303,7 @@ export default function TramiteClient({ tramite, userAge, isFavorite: initialFav
                   : "bg-white text-gray-700 border-gray-200 hover:border-brand-primary hover:text-brand-primary"
               }`}>
               <Calendar className="w-4 h-4" />
-              {calSynced ? "Sincronizado" : "Agregar al calendario"}
+              {calSynced ? t.tramite.synced : t.tramite.addCalendar}
             </button>
             {calError && !calModal && (
               <div className="absolute top-full mt-1 right-0 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 text-xs text-amber-800 whitespace-nowrap shadow-md z-10">
@@ -287,7 +320,7 @@ export default function TramiteClient({ tramite, userAge, isFavorite: initialFav
                 : "bg-white text-gray-700 border-gray-200 hover:border-rose-400 hover:text-rose-500"
             }`}>
             {favorite ? <HeartOff className="w-4 h-4" /> : <Heart className="w-4 h-4" />}
-            {favorite ? "Quitar favorito" : "Guardar favorito"}
+            {favorite ? t.tramite.removeFavorite : t.tramite.saveFavorite}
           </button>
         </div>
       </div>
@@ -300,10 +333,10 @@ export default function TramiteClient({ tramite, userAge, isFavorite: initialFav
             <button key={tab} onClick={() => setActiveTab(tab)}
               className={`flex-1 py-4 px-6 text-sm font-bold min-h-[44px] min-w-[120px] transition capitalize
                 ${activeTab === tab ? "text-brand-primary bg-brand-primary/10 border-b-2 border-brand-primary" : "text-slate-500 hover:bg-slate-50 hover:text-slate-700"}`}>
-              {tab === "pasos" && "Procedimiento"}
-              {tab === "requisitos" && "Requisitos y Documentos"}
-              {tab === "puntos" && "Puntos de Atención"}
-              {tab === "tips" && "Recomendaciones"}
+              {tab === "pasos" && t.tramite.procedure}
+              {tab === "requisitos" && t.tramite.requirements}
+              {tab === "puntos" && t.tramite.offices}
+              {tab === "tips" && t.tramite.tips}
             </button>
           );
         })}
@@ -335,9 +368,9 @@ export default function TramiteClient({ tramite, userAge, isFavorite: initialFav
                   </div>
                   <div className="mt-8 flex justify-between">
                     <button onClick={() => setCurrentStepIndex(i => Math.max(0, i - 1))} disabled={currentStepIndex === 0}
-                      className="px-6 py-2 bg-white border border-gray-300 rounded font-semibold text-gray-700 disabled:opacity-50 min-h-[44px] min-w-[44px]">Anterior</button>
+                      className="px-6 py-2 bg-white border border-gray-300 rounded font-semibold text-gray-700 disabled:opacity-50 min-h-[44px] min-w-[44px]">{t.tramite.previous}</button>
                     <button onClick={() => setCurrentStepIndex(i => Math.min(tramite.pasos.length - 1, i + 1))} disabled={currentStepIndex === tramite.pasos.length - 1}
-                      className="px-8 py-2 bg-brand-primary text-white rounded-xl font-bold hover:bg-brand-primary-dark disabled:opacity-50 min-h-[44px] min-w-[44px] shadow-md transition-all active:scale-95">Siguiente</button>
+                      className="px-8 py-2 bg-brand-primary text-white rounded-xl font-bold hover:bg-brand-primary-dark disabled:opacity-50 min-h-[44px] min-w-[44px] shadow-md transition-all active:scale-95">{t.tramite.next}</button>
                   </div>
                 </div>
               </div>
