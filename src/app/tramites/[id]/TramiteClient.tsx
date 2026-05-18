@@ -91,8 +91,7 @@ export default function TramiteClient({ tramite, userAge, isFavorite: initialFav
     const spanishVoice = voices.find(v => v.lang.startsWith("es"));
     if (spanishVoice) utt.voice = spanishVoice;
 
-    utt.onstart = () => { setTtsActive(true); setTtsPaused(false); };
-    utt.onend   = () => { setTtsActive(false); setTtsPaused(false); uttRef.current = null; };
+    utt.onend = () => { setTtsActive(false); setTtsPaused(false); uttRef.current = null; };
     utt.onerror = (e) => {
       // "interrupted" y "canceled" son normales (stop manual / cambio de pestaña)
       if (e.error !== "interrupted" && e.error !== "canceled") {
@@ -105,8 +104,10 @@ export default function TramiteClient({ tramite, userAge, isFavorite: initialFav
 
     uttRef.current = utt; // Evitar GC de la utterance mientras se reproduce
     window.speechSynthesis.speak(utt);
-    // Nota: setTtsActive(true) lo hace onstart, no aquí,
-    // para reflejar el estado real de reproducción
+    // Cambiar estado inmediatamente tras speak() — no esperar onstart
+    // porque onstart no dispara de forma confiable en todos los browsers
+    setTtsActive(true);
+    setTtsPaused(false);
   }
 
   function ttsPause() {
