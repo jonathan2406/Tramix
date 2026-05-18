@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   CheckCircle2, Circle, MapPin, Clock, Phone, AlertCircle, FileText,
   ChevronDown, ChevronUp, ShieldCheck, ExternalLink,
@@ -43,77 +43,90 @@ export default function TramiteClient({ tramite, userAge, isFavorite: initialFav
   const [checkedReqs, setCheckedReqs] = useState<Record<string, boolean>>({});
   const [expandedVenue, setExpandedVenue] = useState<string | null>(null);
 
-  // ─── HU-27: TTS state ──────────────────────────────────────────────────────
+  // ─── HU-27: TTS ────────────────────────────────────────────────────────────
   const [ttsActive, setTtsActive] = useState(false);
   const [ttsPaused, setTtsPaused] = useState(false);
   const [ttsError, setTtsError] = useState<string | null>(null);
-  const synthRef = useRef<SpeechSynthesis | null>(null);
+  // Guardamos la utterance en ref para evitar que el GC la elimine antes de que termine
   const uttRef = useRef<SpeechSynthesisUtterance | null>(null);
 
-  useEffect(() => {
-    synthRef.current = typeof window !== "undefined" && "speechSynthesis" in window
-      ? window.speechSynthesis
-      : null;
-    return () => { synthRef.current?.cancel(); };
-  }, []);
+  const ttsSupported = typeof window !== "undefined" && "speechSynthesis" in window;
 
+  // Detener al cambiar de pestaña
   useEffect(() => {
-    synthRef.current?.cancel();
+    if (ttsSupported) window.speechSynthesis.cancel();
     setTtsActive(false);
     setTtsPaused(false);
     setTtsError(null);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
+
+  // Limpiar al desmontar
+  useEffect(() => {
+    return () => { if (ttsSupported) window.speechSynthesis.cancel(); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function ttsStart() {
     setTtsError(null);
 
-    if (!synthRef.current) {
-      setTtsError("Tu navegador no soporta lectura en voz alta.");
+    if (!ttsSupported) {
+      setTtsError("Tu navegador no soporta la lectura en voz alta.");
       return;
     }
 
     const text = getTabText(tramite, activeTab, userAge);
     if (!text) return;
 
-    synthRef.current.cancel();
+    // Solo cancelar si ya hay algo reproduciéndose (evita el bug de Chrome con cancel+speak inmediato)
+    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+      window.speechSynthesis.cancel();
+    }
 
-    // Chrome bug: speak() inmediatamente después de cancel() a veces falla
-    setTimeout(() => {
-      const utt = new SpeechSynthesisUtterance(text);
-      // No forzar locale — el navegador usa la voz disponible en español
-      // es-CO no existe en la mayoría de sistemas; usar "es" es más compatible
-      utt.lang = "es";
-      utt.rate = 0.95;
-      utt.onend = () => { setTtsActive(false); setTtsPaused(false); };
-      utt.onerror = (e) => {
-        // "interrupted" es normal cuando el usuario detiene manualmente
-        if (e.error !== "interrupted" && e.error !== "canceled") {
-          setTtsError("No se pudo iniciar la lectura. Verifica que tu dispositivo tenga voces instaladas.");
-        }
-        setTtsActive(false);
-        setTtsPaused(false);
-      };
-      uttRef.current = utt;
-      synthRef.current!.speak(utt);
-      setTtsActive(true);
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.rate = 0.92;
+
+    // Intentar usar una voz en español si existe; si no, el browser usa la predeterminada
+    const voices = window.speechSynthesis.getVoices();
+    const spanishVoice = voices.find(v => v.lang.startsWith("es"));
+    if (spanishVoice) utt.voice = spanishVoice;
+
+    utt.onstart = () => { setTtsActive(true); setTtsPaused(false); };
+    utt.onend   = () => { setTtsActive(false); setTtsPaused(false); uttRef.current = null; };
+    utt.onerror = (e) => {
+      // "interrupted" y "canceled" son normales (stop manual / cambio de pestaña)
+      if (e.error !== "interrupted" && e.error !== "canceled") {
+        setTtsError(`No se pudo leer (${e.error}). Recarga la página o prueba con Chrome.`);
+      }
+      setTtsActive(false);
       setTtsPaused(false);
-    }, 150);
+      uttRef.current = null;
+    };
+
+    uttRef.current = utt; // Evitar GC de la utterance mientras se reproduce
+    window.speechSynthesis.speak(utt);
+    // Nota: setTtsActive(true) lo hace onstart, no aquí,
+    // para reflejar el estado real de reproducción
   }
 
   function ttsPause() {
-    synthRef.current?.pause();
+    if (!ttsSupported) return;
+    window.speechSynthesis.pause();
     setTtsPaused(true);
   }
 
   function ttsResume() {
-    synthRef.current?.resume();
+    if (!ttsSupported) return;
+    window.speechSynthesis.resume();
     setTtsPaused(false);
   }
 
   function ttsStop() {
-    synthRef.current?.cancel();
+    if (!ttsSupported) return;
+    window.speechSynthesis.cancel();
     setTtsActive(false);
     setTtsPaused(false);
+    uttRef.current = null;
   }
 
   // ─── HU-29: Favoritos state ────────────────────────────────────────────────
