@@ -47,84 +47,94 @@ export default function TramiteClient({ tramite, userAge, isFavorite: initialFav
   const [ttsActive, setTtsActive] = useState(false);
   const [ttsPaused, setTtsPaused] = useState(false);
   const [ttsError, setTtsError] = useState<string | null>(null);
-  // Guardamos la utterance en ref para evitar que el GC la elimine antes de que termine
+  const [ttsVoices, setTtsVoices] = useState<SpeechSynthesisVoice[]>([]);
   const uttRef = useRef<SpeechSynthesisUtterance | null>(null);
 
-  const ttsSupported = typeof window !== "undefined" && "speechSynthesis" in window;
+  // Precarga de voces — Chrome las carga de forma asíncrona vía evento voiceschanged
+  useEffect(() => {
+    if (!("speechSynthesis" in window)) return;
+    const load = () => setTtsVoices(window.speechSynthesis.getVoices());
+    load();
+    window.speechSynthesis.addEventListener("voiceschanged", load);
+    return () => window.speechSynthesis.removeEventListener("voiceschanged", load);
+  }, []);
 
   // Detener al cambiar de pestaña
   useEffect(() => {
-    if (ttsSupported) window.speechSynthesis.cancel();
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     setTtsActive(false);
     setTtsPaused(false);
     setTtsError(null);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
 
   // Limpiar al desmontar
   useEffect(() => {
-    return () => { if (ttsSupported) window.speechSynthesis.cancel(); };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => { if ("speechSynthesis" in window) window.speechSynthesis.cancel(); };
   }, []);
 
   function ttsStart() {
     setTtsError(null);
 
-    if (!ttsSupported) {
+    if (!("speechSynthesis" in window)) {
       setTtsError("Tu navegador no soporta la lectura en voz alta.");
       return;
     }
 
     const text = getTabText(tramite, activeTab, userAge);
-    if (!text) return;
-
-    // Solo cancelar si ya hay algo reproduciéndose (evita el bug de Chrome con cancel+speak inmediato)
-    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
-      window.speechSynthesis.cancel();
+    if (!text) {
+      setTtsError("No hay texto disponible para leer en esta sección.");
+      return;
     }
 
+    const synth = window.speechSynthesis;
+
+    // Voces aún no disponibles — informar al usuario
+    if (ttsVoices.length === 0) {
+      setTtsError("Las voces de texto a voz aún no están listas. Espera un momento y vuelve a intentarlo.");
+      return;
+    }
+
+    // Chrome fix: si el sintetizador está pausado (estado colgado), reanudarlo primero
+    if (synth.paused) synth.resume();
+
+    // Cancelar cualquier utterance previa
+    synth.cancel();
+
     const utt = new SpeechSynthesisUtterance(text);
-    utt.rate = 0.92;
+    utt.rate = 0.9;
 
-    // Intentar usar una voz en español si existe; si no, el browser usa la predeterminada
-    const voices = window.speechSynthesis.getVoices();
-    const spanishVoice = voices.find(v => v.lang.startsWith("es"));
-    if (spanishVoice) utt.voice = spanishVoice;
+    // Asignar voz en español si existe; si no, la primera disponible (evita fallo silencioso)
+    const spanishVoice = ttsVoices.find(v => v.lang.startsWith("es"));
+    utt.voice = spanishVoice ?? ttsVoices[0];
 
-    utt.onend = () => { setTtsActive(false); setTtsPaused(false); uttRef.current = null; };
+    utt.onend   = () => { setTtsActive(false); setTtsPaused(false); uttRef.current = null; };
     utt.onerror = (e) => {
-      // "interrupted" y "canceled" son normales (stop manual / cambio de pestaña)
       if (e.error !== "interrupted" && e.error !== "canceled") {
-        setTtsError(`No se pudo leer (${e.error}). Recarga la página o prueba con Chrome.`);
+        setTtsError(`Error de voz: "${e.error}". Prueba con otro navegador o verifica el audio del sistema.`);
       }
       setTtsActive(false);
       setTtsPaused(false);
       uttRef.current = null;
     };
 
-    uttRef.current = utt; // Evitar GC de la utterance mientras se reproduce
-    window.speechSynthesis.speak(utt);
-    // Cambiar estado inmediatamente tras speak() — no esperar onstart
-    // porque onstart no dispara de forma confiable en todos los browsers
+    uttRef.current = utt;
+    synth.speak(utt);
     setTtsActive(true);
     setTtsPaused(false);
   }
 
   function ttsPause() {
-    if (!ttsSupported) return;
-    window.speechSynthesis.pause();
+    window.speechSynthesis?.pause();
     setTtsPaused(true);
   }
 
   function ttsResume() {
-    if (!ttsSupported) return;
-    window.speechSynthesis.resume();
+    window.speechSynthesis?.resume();
     setTtsPaused(false);
   }
 
   function ttsStop() {
-    if (!ttsSupported) return;
-    window.speechSynthesis.cancel();
+    window.speechSynthesis?.cancel();
     setTtsActive(false);
     setTtsPaused(false);
     uttRef.current = null;
@@ -302,7 +312,15 @@ export default function TramiteClient({ tramite, userAge, isFavorite: initialFav
             )}
           </div>
           {ttsError && (
-            <p className="text-xs text-red-600 max-w-[280px]">{ttsError}</p>
+            <p className="text-xs text-red-600 max-w-[320px] bg-red-50 border border-red-200 rounded-lg px-2 py-1">{ttsError}</p>
+          )}
+          {/* Diagnóstico temporal: muestra voces cargadas */}
+          {!ttsActive && !ttsError && (
+            <p className="text-xs text-gray-400">
+              {ttsVoices.length === 0
+                ? "Cargando voces..."
+                : `${ttsVoices.length} voz(ces) disponible(s)`}
+            </p>
           )}
         </div>
 
