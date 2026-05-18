@@ -88,12 +88,6 @@ export default function TramiteClient({ tramite, userAge, isFavorite: initialFav
 
     const synth = window.speechSynthesis;
 
-    // Voces aún no disponibles — informar al usuario
-    if (ttsVoices.length === 0) {
-      setTtsError("Las voces de texto a voz aún no están listas. Espera un momento y vuelve a intentarlo.");
-      return;
-    }
-
     // Chrome fix: si el sintetizador está pausado (estado colgado), reanudarlo primero
     if (synth.paused) synth.resume();
 
@@ -103,9 +97,12 @@ export default function TramiteClient({ tramite, userAge, isFavorite: initialFav
     const utt = new SpeechSynthesisUtterance(text);
     utt.rate = 0.9;
 
-    // Asignar voz en español si existe; si no, la primera disponible (evita fallo silencioso)
-    const spanishVoice = ttsVoices.find(v => v.lang.startsWith("es"));
-    utt.voice = spanishVoice ?? ttsVoices[0];
+    // Asignar voz en español solo si las voces ya cargaron;
+    // si no, el browser usa su voz predeterminada y speak() igual funciona
+    if (ttsVoices.length > 0) {
+      const spanishVoice = ttsVoices.find(v => v.lang.startsWith("es"));
+      utt.voice = spanishVoice ?? ttsVoices[0];
+    }
 
     utt.onend   = () => { setTtsActive(false); setTtsPaused(false); uttRef.current = null; };
     utt.onerror = (e) => {
@@ -313,14 +310,6 @@ export default function TramiteClient({ tramite, userAge, isFavorite: initialFav
           </div>
           {ttsError && (
             <p className="text-xs text-red-600 max-w-[320px] bg-red-50 border border-red-200 rounded-lg px-2 py-1">{ttsError}</p>
-          )}
-          {/* Diagnóstico temporal: muestra voces cargadas */}
-          {!ttsActive && !ttsError && (
-            <p className="text-xs text-gray-400">
-              {ttsVoices.length === 0
-                ? "Cargando voces..."
-                : `${ttsVoices.length} voz(ces) disponible(s)`}
-            </p>
           )}
         </div>
 
