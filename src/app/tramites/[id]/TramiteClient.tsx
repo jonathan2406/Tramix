@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect } from "react";
 import {
   CheckCircle2, Circle, MapPin, Clock, Phone, AlertCircle, FileText,
   ChevronDown, ChevronUp, ShieldCheck, ExternalLink,
-  Volume2, Pause, Play, Square,
   Heart, HeartOff, Calendar, X
 } from "lucide-react";
 import { useLanguage } from "@/components/LanguageContext";
@@ -16,25 +15,6 @@ type TramiteProps = {
   tramiteId?: string;
 };
 
-// ─── HU-27: Texto que se leerá según la pestaña activa ───────────────────────
-function getTabText(tramite: any, activeTab: string, userAge?: string | null): string {
-  if (activeTab === "pasos") {
-    return tramite.pasos.map((p: any, i: number) => `Paso ${i + 1}: ${p.title}. ${p.description}`).join(". ");
-  }
-  if (activeTab === "requisitos") {
-    if (tramite.requisitos.length === 0) return "Este trámite no requiere documentación previa.";
-    return "Documentos requeridos: " + tramite.requisitos.map((r: any) => r.title).join(", ") + ".";
-  }
-  if (activeTab === "puntos") {
-    if (tramite.isOnline) return "Este trámite es cien por ciento en línea. No requiere asistencia presencial.";
-    const activos = tramite.puntosAtencion.filter((p: any) => !p.status || p.status === "activo");
-    return activos.map((p: any) => `${p.address}. Horario: ${p.schedule}. Teléfono: ${p.phone}.`).join(" ");
-  }
-  if (activeTab === "tips") {
-    return tramite.recomendaciones.map((r: any) => r.text).join(". ");
-  }
-  return "";
-}
 
 export default function TramiteClient({ tramite, userAge, isFavorite: initialFavorite = false, tramiteId = "" }: TramiteProps) {
   const { t } = useLanguage();
@@ -43,99 +23,7 @@ export default function TramiteClient({ tramite, userAge, isFavorite: initialFav
   const [checkedReqs, setCheckedReqs] = useState<Record<string, boolean>>({});
   const [expandedVenue, setExpandedVenue] = useState<string | null>(null);
 
-  // ─── HU-27: TTS ────────────────────────────────────────────────────────────
-  const [ttsActive, setTtsActive] = useState(false);
-  const [ttsPaused, setTtsPaused] = useState(false);
-  const [ttsError, setTtsError] = useState<string | null>(null);
-  const [ttsVoices, setTtsVoices] = useState<SpeechSynthesisVoice[]>([]);
-  const uttRef = useRef<SpeechSynthesisUtterance | null>(null);
-
-  // Precarga de voces — Chrome las carga de forma asíncrona vía evento voiceschanged
-  useEffect(() => {
-    if (!("speechSynthesis" in window)) return;
-    const load = () => setTtsVoices(window.speechSynthesis.getVoices());
-    load();
-    window.speechSynthesis.addEventListener("voiceschanged", load);
-    return () => window.speechSynthesis.removeEventListener("voiceschanged", load);
-  }, []);
-
-  // Detener al cambiar de pestaña
-  useEffect(() => {
-    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-    setTtsActive(false);
-    setTtsPaused(false);
-    setTtsError(null);
-  }, [activeTab]);
-
-  // Limpiar al desmontar
-  useEffect(() => {
-    return () => { if ("speechSynthesis" in window) window.speechSynthesis.cancel(); };
-  }, []);
-
-  function ttsStart() {
-    setTtsError(null);
-
-    if (!("speechSynthesis" in window)) {
-      setTtsError("Tu navegador no soporta la lectura en voz alta.");
-      return;
-    }
-
-    const text = getTabText(tramite, activeTab, userAge);
-    if (!text) {
-      setTtsError("No hay texto disponible para leer en esta sección.");
-      return;
-    }
-
-    const synth = window.speechSynthesis;
-
-    // Chrome fix: si el sintetizador está pausado (estado colgado), reanudarlo primero
-    if (synth.paused) synth.resume();
-
-    // Cancelar cualquier utterance previa
-    synth.cancel();
-
-    const utt = new SpeechSynthesisUtterance(text);
-    utt.rate = 0.9;
-
-    // Asignar voz en español solo si las voces ya cargaron;
-    // si no, el browser usa su voz predeterminada y speak() igual funciona
-    if (ttsVoices.length > 0) {
-      const spanishVoice = ttsVoices.find(v => v.lang.startsWith("es"));
-      utt.voice = spanishVoice ?? ttsVoices[0];
-    }
-
-    utt.onend   = () => { setTtsActive(false); setTtsPaused(false); uttRef.current = null; };
-    utt.onerror = (e) => {
-      if (e.error !== "interrupted" && e.error !== "canceled") {
-        setTtsError(`Error de voz: "${e.error}". Prueba con otro navegador o verifica el audio del sistema.`);
-      }
-      setTtsActive(false);
-      setTtsPaused(false);
-      uttRef.current = null;
-    };
-
-    uttRef.current = utt;
-    synth.speak(utt);
-    setTtsActive(true);
-    setTtsPaused(false);
-  }
-
-  function ttsPause() {
-    window.speechSynthesis?.pause();
-    setTtsPaused(true);
-  }
-
-  function ttsResume() {
-    window.speechSynthesis?.resume();
-    setTtsPaused(false);
-  }
-
-  function ttsStop() {
-    window.speechSynthesis?.cancel();
-    setTtsActive(false);
-    setTtsPaused(false);
-    uttRef.current = null;
-  }
+  // HU-27: La lectura en voz alta se maneja globalmente en AccessibilityControls (TalkBack)
 
   // ─── HU-29: Favoritos state ────────────────────────────────────────────────
   const [favorite, setFavorite] = useState(initialFavorite);
@@ -280,40 +168,8 @@ export default function TramiteClient({ tramite, userAge, isFavorite: initialFav
         </div>
       )}
 
-      {/* BARRA DE ACCIONES: TTS + Favorito + Calendario */}
-      <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-b border-gray-100 bg-gray-50/50">
-        {/* HU-27: Controles TTS */}
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-2">
-            {!ttsActive ? (
-              <button onClick={ttsStart} title="Leer en voz alta"
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-primary text-white text-xs font-bold hover:bg-brand-primary-dark transition-all min-h-[36px]">
-                <Volume2 className="w-4 h-4" /> {t.tramite.listenSection}
-              </button>
-            ) : (
-              <div className="flex items-center gap-2">
-                {ttsPaused ? (
-                  <button onClick={ttsResume} title="Reanudar" className="p-2 rounded-xl bg-brand-primary text-white hover:bg-brand-primary-dark transition-all">
-                    <Play className="w-4 h-4" />
-                  </button>
-                ) : (
-                  <button onClick={ttsPause} title="Pausar" className="p-2 rounded-xl bg-amber-500 text-white hover:bg-amber-600 transition-all">
-                    <Pause className="w-4 h-4" />
-                  </button>
-                )}
-                <button onClick={ttsStop} title="Detener" className="p-2 rounded-xl bg-red-500 text-white hover:bg-red-600 transition-all">
-                  <Square className="w-4 h-4" />
-                </button>
-                <span className="text-xs text-gray-500 font-medium">{ttsPaused ? "Pausado" : "Leyendo..."}</span>
-              </div>
-            )}
-          </div>
-          {ttsError && (
-            <p className="text-xs text-red-600 max-w-[320px] bg-red-50 border border-red-200 rounded-lg px-2 py-1">{ttsError}</p>
-          )}
-        </div>
-
-        {/* HU-29 + HU-33: Favorito y Calendario */}
+      {/* BARRA DE ACCIONES: Favorito + Calendario (HU-29, HU-33) */}
+      <div className="flex flex-wrap items-center justify-end gap-3 px-6 py-4 border-b border-gray-100 bg-gray-50/50">
         <div className="flex items-center gap-2">
           {/* HU-33: Botón calendario */}
           <div className="relative">
