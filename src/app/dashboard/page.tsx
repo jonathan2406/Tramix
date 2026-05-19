@@ -37,16 +37,12 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
-        <h1 className="text-3xl font-bold text-gray-900">Hola, {user?.name || "Usuario"}!</h1>
-        <p className="text-gray-500 mt-2">Bienvenido a TRAMIX. Encuentra y gestiona tus trámites rápidamente.</p>
-      </div>
-
       <DashboardClient
         categorias={categorias}
         tramites={tramites as any}
         userAge={user?.ageRange}
         userRole={user?.role}
+        userName={user?.name ?? "Usuario"}
         puntosAtencion={puntosAtencion as any}
       />
     </div>

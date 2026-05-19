@@ -2,9 +2,11 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useLanguage } from "@/components/LanguageContext";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -28,15 +30,15 @@ export default function RegisterPage() {
 
   useEffect(() => {
     if (formData.email !== "" && !isValidEmail(formData.email)) {
-      setEmailError("Formato de correo inválido");
+      setEmailError(t.register.emailError);
     } else {
       setEmailError("");
     }
 
     if (formData.password !== "" && formData.password.length < 8) {
-      setPasswordError("La contraseña debe tener al menos 8 caracteres");
+      setPasswordError(t.register.passwordLengthError);
     } else if (formData.password !== "" && !isValidPassword(formData.password)) {
-      setPasswordError("La contraseña debe ser alfanumérica");
+      setPasswordError(t.register.passwordAlphanumError);
     } else {
       setPasswordError("");
     }
@@ -63,7 +65,7 @@ export default function RegisterPage() {
     } else {
       // HU-01: limpia el formulario y muestra una alerta verde
       setFormData({ name: "", email: "", password: "", termsAccepted: false });
-      setSuccess("Registro exitoso. Ahora puedes iniciar sesión");
+      setSuccess(t.register.successMessage);
     }
   };
 
@@ -74,7 +76,7 @@ export default function RegisterPage() {
       <div className="absolute bottom-0 right-0 w-64 h-64 bg-brand-secondary/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
 
       <div className="max-w-md w-full bg-white/80 backdrop-blur-md rounded-[2rem] shadow-2xl shadow-brand-primary/5 p-10 border border-white relative z-10">
-        <h1 className="text-3xl font-black text-brand-primary-dark text-center mb-8 tracking-tight">Crear Cuenta</h1>
+        <h1 className="text-3xl font-black text-brand-primary-dark text-center mb-8 tracking-tight">{t.register.title}</h1>
         
         {success && (
           <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
@@ -90,7 +92,7 @@ export default function RegisterPage() {
 
         <form onSubmit={handleRegister} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Nombre completo</label>
+            <label className="block text-sm font-medium text-gray-700">{t.register.fullName}</label>
             <input
               type="text"
               required
@@ -101,7 +103,7 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Correo Electrónico</label>
+            <label className="block text-sm font-medium text-gray-700">{t.register.email}</label>
             <input
               type="email"
               required
@@ -113,11 +115,11 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Contraseña</label>
+            <label className="block text-sm font-medium text-gray-700">{t.register.password}</label>
             <input
               type="password"
               required
-              title="Mínimo 8 caracteres, al menos 1 letra y 1 número."
+              title={t.register.passwordHint}
               className={`mt-1 block w-full px-4 py-2 rounded-lg border ${passwordError ? "border-red-500" : "border-gray-300"} focus:ring-blue-500 focus:border-blue-500`}
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -135,8 +137,10 @@ export default function RegisterPage() {
               className="mt-1 h-5 w-5 text-brand-primary focus:ring-brand-primary border-slate-300 rounded-md cursor-pointer"
             />
             <label htmlFor="terms" className="ml-3 block text-sm text-slate-600 font-medium leading-relaxed">
-              Acepto <button type="button" onClick={() => setShowTerms(true)} className="text-brand-primary font-bold hover:underline">términos y condiciones</button> y 
-              <button type="button" onClick={() => setShowTerms(true)} className="text-brand-primary font-bold hover:underline ml-1">política de privacidad</button>.
+              {t.register.termsPrefix}{" "}
+              <button type="button" onClick={() => setShowTerms(true)} className="text-brand-primary font-bold hover:underline">{t.register.termsLink}</button>{" "}
+              {t.register.andText}{" "}
+              <button type="button" onClick={() => setShowTerms(true)} className="text-brand-primary font-bold hover:underline">{t.register.privacyLink}</button>.
             </label>
           </div>
 
@@ -145,28 +149,27 @@ export default function RegisterPage() {
             disabled={!isFormValid}
             className={`w-full mt-6 text-white font-black py-4 rounded-xl transition-all shadow-lg active:scale-[0.98] ${!isFormValid ? "bg-slate-300 cursor-not-allowed shadow-none" : "bg-brand-primary hover:bg-brand-primary-dark shadow-brand-primary/20"}`}
           >
-            Registrarse
+            {t.register.submitButton}
           </button>
         </form>
-        
+
         <p className="mt-6 text-center text-sm text-gray-600">
-          ¿Ya tienes cuenta? <Link href="/login" className="text-blue-600 font-semibold hover:underline">Inicia sesión</Link>
+          {t.register.alreadyHaveAccount}{" "}
+          <Link href="/login" className="text-blue-600 font-semibold hover:underline">{t.register.loginLink}</Link>
         </p>
 
         {showTerms && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-lg p-6 max-w-lg w-full">
-              <h2 className="text-xl font-bold mb-4">Política de Privacidad y Términos</h2>
+              <h2 className="text-xl font-bold mb-4">{t.register.termsTitle}</h2>
               <p className="text-sm text-gray-600 mb-4 h-48 overflow-y-auto">
-                Al aceptar estos términos, consientes el tratamiento de tus datos personales,
-                los cuales serán guardados y auditados (con timestamp) en nuestros servidores y base de datos con motivos de uso de TRAMIX.
-                Uso de datos unicamente para facilitacion de tramites.
+                {t.register.termsContent}
               </p>
-              <button 
+              <button
                 onClick={() => setShowTerms(false)}
                 className="w-full bg-brand-primary text-white font-bold py-3 rounded-xl hover:bg-brand-primary-dark transition-all"
               >
-                Cerrar
+                {t.register.termsClose}
               </button>
             </div>
           </div>

@@ -24,11 +24,12 @@ const AGE_LABELS: Record<string, string> = {
 type Categoria = { id: string; name: string; icon: string };
 type Tramite = { id: string; title: string; description: string; code: string; categoriaId: string | null; isOnline: boolean; targetAgeRange: string | null; type: string };
 
-export default function DashboardClient({ categorias, tramites, userAge, userRole, puntosAtencion }: {
+export default function DashboardClient({ categorias, tramites, userAge, userRole, userName, puntosAtencion }: {
   categorias: Categoria[];
   tramites: Tramite[];
   userAge: string | null | undefined;
   userRole: string | null | undefined;
+  userName: string;
   puntosAtencion?: any[];
 }) {
   const { t } = useLanguage();
@@ -92,7 +93,14 @@ export default function DashboardClient({ categorias, tramites, userAge, userRol
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
+      {/* Saludo personalizado */}
+      <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
+        <h1 className="text-3xl font-bold text-gray-900">{t.dashboard.greeting(userName)}</h1>
+        <p className="text-gray-500 mt-2">{t.dashboard.subtitle}</p>
+      </div>
+
+      <div className="space-y-8">
       {/* HU-21: Aviso cuando intenta acceder a trámite fuera de su edad */}
       {ageError && (
         <div className="flex items-center justify-between gap-3 bg-amber-50 border border-amber-300 rounded-2xl px-5 py-3">
@@ -228,8 +236,8 @@ export default function DashboardClient({ categorias, tramites, userAge, userRol
 
       {/* NEW SECTIONS */}
       <PointsOfAttentionSection puntos={puntosAtencion} />
-      
       <TipsSection />
+      </div>
     </div>
   );
 }
