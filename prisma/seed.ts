@@ -36,6 +36,7 @@ async function main() {
       description: 'Trámite para renovar la licencia de conducción ante el ministerio de transporte.',
       code: 'TRM-1024',
       isOnline: true,
+      targetAgeRange: null, // Sin restricción: disponible para todos los rangos de edad
       categoriaId: catMovilidad.id,
       pasos: {
         create: [
@@ -59,6 +60,7 @@ async function main() {
       description: 'Solicitud formal para obtener la historia clínica de un paciente.',
       code: 'TRM-2055',
       isOnline: false,
+      targetAgeRange: null, // Sin restricción: cualquier edad puede solicitar su historia clínica
       categoriaId: catSalud.id,
       puntosAtencion: {
         create: [
@@ -82,6 +84,7 @@ async function main() {
       description: 'El Registro Único Tributario (RUT) es el mecanismo para identificar y clasificar a los sujetos de obligaciones administradas por la DIAN.',
       code: 'TRM-RUT-01',
       isOnline: true,
+      targetAgeRange: '18-25', // Mínimo 18 años para registro independiente ante la DIAN
       categoriaId: catDocumentacion.id,
       pasos: {
         create: [
@@ -105,6 +108,7 @@ async function main() {
       description: 'Documento de identidad de los ciudadanos colombianos mayores de 18 años.',
       code: 'TRM-CED-02',
       isOnline: false,
+      targetAgeRange: '18-25', // Exclusivo para mayores de 18 años
       categoriaId: catDocumentacion.id,
       externalLink: 'https://wsp.registraduria.gov.co/estado_docs/documento/consultar/',
       pasos: {
@@ -135,6 +139,7 @@ async function main() {
       description: 'Documento de viaje que identifica a los colombianos en el exterior.',
       code: 'TRM-PAS-03',
       isOnline: false,
+      targetAgeRange: null, // Sin restricción: cualquier edad puede tramitar pasaporte
       categoriaId: catDocumentacion.id,
       pasos: {
         create: [
@@ -163,6 +168,7 @@ async function main() {
       description: 'Trámite para obtener la libreta militar y definir la situación de reserva.',
       code: 'TRM-MIL-04',
       isOnline: false,
+      targetAgeRange: '18-25', // Aplica a partir de los 18 años
       categoriaId: catDocumentacion.id,
       pasos: {
         create: [
