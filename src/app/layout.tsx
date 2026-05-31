@@ -17,6 +17,7 @@ import Image from "next/image";
 import AccessibilityControls from "@/components/AccessibilityControls";
 import ChatBot from "@/components/ChatBot";
 import { LanguageProvider } from "@/components/LanguageContext";
+import VisualSignSupport from "@/components/visual-sign/VisualSignSupport";
 
 export default function RootLayout({
   children,
@@ -34,6 +35,7 @@ export default function RootLayout({
             </main>
             <AccessibilityControls />
             <ChatBot />
+            <VisualSignSupport />
           </LanguageProvider>
         </Providers>
       </body>

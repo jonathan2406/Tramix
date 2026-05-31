@@ -14,7 +14,7 @@ export type VisualSignPhrase = {
   sequence: VisualSignItem[];
 };
 
-const PLACEHOLDER_IMAGE_URL = "/signs/visual-support/images/placeholder.svg";
+const IMAGE_BASE_PATH = "/signs/visual-support/images";
 
 export function normalizeSelectedText(value: string) {
   return value
@@ -31,36 +31,186 @@ function formatWordLabel(word: string) {
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
-function createPlaceholderItem(key: string, label: string): VisualSignItem {
-  return {
-    key,
-    label,
-    imageUrl: PLACEHOLDER_IMAGE_URL,
-    alt: `Placeholder apoyo visual para ${label}`,
-    isPlaceholder: true,
-  };
-}
+const visualSignImageFiles: Record<string, string> = {
+  academia: "sign-academia.png",
+  acceder: "sign-acceder.png",
+  accesible: "sign-accesible.png",
+  admin: "sign-admin.png",
+  apellido: "sign-apellido.png",
+  asi: "sign-asi.png",
+  asistencia: "sign-asistencia.png",
+  asistente: "sign-asistente.png",
+  atencion: "sign-atencion.png",
+  bilingue: "sign-bilingue.png",
+  buscar: "sign-buscar.png",
+  busqueda: "sign-busqueda.png",
+  campo: "sign-campo.png",
+  ciudadania: "sign-ciudadania.png",
+  codigo: "sign-codigo.png",
+  como: "sign-como.png",
+  dashboard: "sign-dashboard.png",
+  digital: "sign-digital.png",
+  documento: "sign-documento.png",
+  edad: "sign-edad.png",
+  experiencia: "sign-experiencia.png",
+  favoritos: "sign-favoritos.png",
+  gestiona: "sign-gestiona.png",
+  gobierno: "sign-gobierno.png",
+  guardar: "sign-guardar.png",
+  ia: "sign-IA.png",
+  idioma: "sign-idioma.png",
+  ingles: "sign-ingles.png",
+  inteligente: "sign-inteligente.png",
+  nombre: "sign-nombre.png",
+  numero: "sign-numero.png",
+  perfil: "sign-perfil.png",
+  salir: "sign-salir.png",
+  social: "sign-social.png",
+  spanish: "sign-spanish.png",
+  tipo: "sign-tipo.png",
+  tramite: "sign-tramite.png",
+};
 
-function createWordDictionary(phrases: string[]) {
-  const words = new Set<string>();
+const labelOverrides: Record<string, string> = {
+  ia: "IA",
+  admin: "Admin",
+  dashboard: "Dashboard",
+  spanish: "Espanol",
+  ingles: "Ingles",
+};
 
-  phrases.forEach((phrase) => {
-    const normalized = normalizeSelectedText(phrase);
-    if (!normalized) return;
-    normalized.split(/\s+/).forEach((word) => {
-      if (word.length > 1) words.add(word);
-    });
-  });
+const wordAliases: Record<string, string> = {
+  academico: "academia",
+  academicos: "academia",
+  academica: "academia",
+  academicas: "academia",
+  administracion: "admin",
+  administrador: "admin",
+  administradores: "admin",
+  administra: "admin",
+  ciudadano: "ciudadania",
+  ciudadanos: "ciudadania",
+  ciudadana: "ciudadania",
+  ciudadanas: "ciudadania",
+  documentos: "documento",
+  nombres: "nombre",
+  apellidos: "apellido",
+  numeros: "numero",
+  perfiles: "perfil",
+  tramites: "tramite",
+  idiomas: "idioma",
+  espanol: "spanish",
+  english: "ingles",
+  gubernamental: "gobierno",
+  gubernamentales: "gobierno",
+  busquedas: "busqueda",
+};
 
+const suffixCandidates = [
+  "mente",
+  "aciones",
+  "acion",
+  "ciones",
+  "cion",
+  "idades",
+  "idad",
+  "amientos",
+  "amiento",
+  "ados",
+  "adas",
+  "idos",
+  "idas",
+  "ando",
+  "iendo",
+  "aba",
+  "ada",
+  "ida",
+  "ara",
+  "era",
+  "aria",
+  "eria",
+  "aste",
+  "iste",
+  "amos",
+  "emos",
+  "imos",
+  "aron",
+  "ieron",
+  "an",
+  "en",
+  "as",
+  "es",
+  "os",
+  "s",
+];
+
+function buildImageDictionary() {
   const entries: Record<string, VisualSignItem> = {};
-  words.forEach((word) => {
-    entries[word] = createPlaceholderItem(word, formatWordLabel(word));
+  Object.entries(visualSignImageFiles).forEach(([key, file]) => {
+    const label = labelOverrides[key] ?? formatWordLabel(key);
+    entries[key] = {
+      key,
+      label,
+      imageUrl: `${IMAGE_BASE_PATH}/${file}`,
+      alt: `Imagen de apoyo visual para ${label}`,
+    };
   });
-
   return entries;
 }
 
-function createPhraseDictionary(phrases: string[], wordDictionary: Record<string, VisualSignItem>) {
+function getCandidateRoots(word: string) {
+  const candidates = new Set<string>();
+  if (word.endsWith("es") && word.length > 4) candidates.add(word.slice(0, -2));
+  if (word.endsWith("s") && word.length > 3) candidates.add(word.slice(0, -1));
+  suffixCandidates.forEach((suffix) => {
+    if (word.endsWith(suffix) && word.length - suffix.length >= 3) {
+      candidates.add(word.slice(0, -suffix.length));
+    }
+  });
+  return Array.from(candidates);
+}
+
+function findPrefixMatch(word: string, keys: string[]) {
+  if (word.length < 4) return null;
+  let best: string | null = null;
+  keys.forEach((key) => {
+    if (key.length < 4) return;
+    if (word.startsWith(key) || (key.startsWith(word) && word.length >= 4)) {
+      if (!best || key.length > best.length) best = key;
+    }
+  });
+  return best;
+}
+
+const visualSignWordsBase = buildImageDictionary();
+const baseKeys = Object.keys(visualSignWordsBase);
+
+function resolveWordKey(word: string) {
+  if (!word) return null;
+  if (visualSignWordsBase[word]) return word;
+  const alias = wordAliases[word];
+  if (alias && visualSignWordsBase[alias]) return alias;
+
+  const candidates = getCandidateRoots(word);
+  for (const candidate of candidates) {
+    if (visualSignWordsBase[candidate]) return candidate;
+    const aliasCandidate = wordAliases[candidate];
+    if (aliasCandidate && visualSignWordsBase[aliasCandidate]) return aliasCandidate;
+  }
+
+  const prefixMatch = findPrefixMatch(word, baseKeys);
+  if (prefixMatch) return prefixMatch;
+
+  return null;
+}
+
+function getWordItem(word: string) {
+  const key = resolveWordKey(word);
+  if (!key) return null;
+  return visualSignWordsBase[key];
+}
+
+function createPhraseDictionary(phrases: string[]) {
   const entries: Record<string, VisualSignPhrase> = {};
 
   phrases.forEach((phrase) => {
@@ -68,8 +218,8 @@ function createPhraseDictionary(phrases: string[], wordDictionary: Record<string
     if (!normalized) return;
     const sequence = normalized
       .split(/\s+/)
-      .map((word) => wordDictionary[word])
-      .filter(Boolean);
+      .map((word) => getWordItem(word))
+      .filter(Boolean) as VisualSignItem[];
 
     if (sequence.length === 0) return;
 
@@ -169,8 +319,8 @@ const profilePhrases = [
 
 const phraseList = [...landingPhrases, ...profilePhrases];
 
-export const visualSignWords = createWordDictionary(phraseList);
-export const visualSignPhrases = createPhraseDictionary(phraseList, visualSignWords);
+export const visualSignWords = visualSignWordsBase;
+export const visualSignPhrases = createPhraseDictionary(phraseList);
 
 export function getVisualSequence(selectedText: string) {
   const normalized = normalizeSelectedText(selectedText);
@@ -181,6 +331,6 @@ export function getVisualSequence(selectedText: string) {
 
   return normalized
     .split(/\s+/)
-    .map((word) => visualSignWords[word])
-    .filter(Boolean);
+    .map((word) => getWordItem(word))
+    .filter(Boolean) as VisualSignItem[];
 }

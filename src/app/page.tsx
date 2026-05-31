@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 import { useLanguage } from "@/components/LanguageContext";
 import HeroMockup from "@/components/home/HeroMockup";
 import SiteFooter from "@/components/home/SiteFooter";
-import VisualSignSupport from "@/components/visual-sign/VisualSignSupport";
 import "./landing.css";
 import {
   ArrowRight,
@@ -46,7 +45,6 @@ export default function Home() {
   return (
     <div className={`landing-root ${jakarta.variable} relative -mt-2 pb-4`}>
       <div className="landing-page-bg" aria-hidden="true" />
-      <VisualSignSupport />
       {/* ─── HERO split ─── */}
       <section className="relative pt-6 pb-20 lg:pt-10 lg:pb-28">
         <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-brand-secondary/15 rounded-full blur-[100px] pointer-events-none" />

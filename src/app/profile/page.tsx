@@ -4,7 +4,6 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLanguage } from "@/components/LanguageContext";
-import VisualSignSupport from "@/components/visual-sign/VisualSignSupport";
 
 function ProfileForm() {
   const { data: session, status } = useSession();
@@ -219,10 +218,7 @@ function ProfileForm() {
 export default function ProfilePage() {
   return (
     <Suspense fallback={<div className="p-8 text-center text-gray-500">Cargando perfil...</div>}>
-      <>
-        <ProfileForm />
-        <VisualSignSupport />
-      </>
+      <ProfileForm />
     </Suspense>
   );
 }

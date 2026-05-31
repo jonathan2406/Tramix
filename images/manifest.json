@@ -1,0 +1,69 @@
+﻿[
+    {
+        "word":  "a",
+        "status":  "no_image",
+        "matched":  "a A Coruña a posteriori a priori abad, desa abadía abajo abandonado, da abandonar abandono",
+        "imageUrl":  "",
+        "file":  "",
+        "sourceUrl":  "https://fundacioncnse-dilse.org/?buscar=a ?buscar=A Coruña ?buscar=a posteriori ?buscar=a priori ?buscar=abad, desa ?buscar=abadía ?buscar=abajo ?buscar=abandonado, da ?buscar=abandonar ?buscar=abandono",
+        "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported"
+    },
+    {
+        "word":  "acceder",
+        "status":  "downloaded",
+        "matched":  "acceder",
+        "imageUrl":  "https://fundacioncnse-dilse.org/bddilse/images/stories/acceder.png",
+        "file":  "C:\\Users\\Cristian\\Desktop\\yone\\Tramix\\images\\sign-acceder.png",
+        "sourceUrl":  "https://fundacioncnse-dilse.org/?buscar=acceder",
+        "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported",
+        "strategy":  "direct"
+    },
+    {
+        "word":  "accesible",
+        "status":  "downloaded",
+        "matched":  "accesible",
+        "imageUrl":  "https://fundacioncnse-dilse.org/bddilse/images/stories/accesible.png",
+        "file":  "C:\\Users\\Cristian\\Desktop\\yone\\Tramix\\images\\sign-accesible.png",
+        "sourceUrl":  "https://fundacioncnse-dilse.org/?buscar=accesible",
+        "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported",
+        "strategy":  "direct"
+    },
+    {
+        "word":  "activa",
+        "status":  "downloaded",
+        "matched":  "activo, va",
+        "imageUrl":  "https://fundacioncnse-dilse.org/bddilse/images/stories/activo.png",
+        "file":  "C:\\Users\\Cristian\\Desktop\\yone\\Tramix\\images\\sign-activa--activo-va.png",
+        "sourceUrl":  "https://fundacioncnse-dilse.org/?buscar=activo, va",
+        "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported",
+        "strategy":  "search"
+    },
+    {
+        "word":  "actualizar",
+        "status":  "downloaded",
+        "matched":  "actualizar",
+        "imageUrl":  "https://fundacioncnse-dilse.org/bddilse/images/stories/actualizar-programa.png",
+        "file":  "C:\\Users\\Cristian\\Desktop\\yone\\Tramix\\images\\sign-actualizar.png",
+        "sourceUrl":  "https://fundacioncnse-dilse.org/?buscar=actualizar",
+        "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported",
+        "strategy":  "search"
+    },
+    {
+        "word":  "al",
+        "status":  "no_image",
+        "matched":  "Al-Ándalus ala alabador, ra alabanza alabar alado, da alambre alargamiento alargar alarido",
+        "imageUrl":  "",
+        "file":  "",
+        "sourceUrl":  "https://fundacioncnse-dilse.org/?buscar=Al-Ándalus ?buscar=ala ?buscar=alabador, ra ?buscar=alabanza ?buscar=alabar ?buscar=alado, da ?buscar=alambre ?buscar=alargamiento ?buscar=alargar ?buscar=alarido",
+        "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported"
+    },
+    {
+        "word":  "alto",
+        "status":  "no_image",
+        "matched":  "alto alto, ta",
+        "imageUrl":  "",
+        "file":  "",
+        "sourceUrl":  "https://fundacioncnse-dilse.org/?buscar=alto ?buscar=alto, ta",
+        "license":  "Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported"
+    }
+]
