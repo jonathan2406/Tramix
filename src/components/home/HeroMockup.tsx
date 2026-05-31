@@ -9,9 +9,9 @@ export default function HeroMockup() {
   return (
     <div className="relative w-full max-w-lg mx-auto lg:mx-0 lg:ml-auto">
       {/* Glow behind mockup */}
-      <div className="absolute inset-4 bg-gradient-to-br from-brand-primary/30 to-brand-secondary/40 rounded-[2rem] blur-3xl opacity-60 animate-pulse-soft" />
+      <div className="absolute inset-4 bg-gradient-to-br from-brand-primary/30 to-brand-secondary/40 rounded-[2rem] blur-3xl opacity-60 animate-landing-pulse-soft" />
 
-      <div className="relative tramix-mockup-shell rounded-[1.75rem] p-1 animate-float">
+      <div className="relative landing-mockup-shell rounded-[1.75rem] p-1 animate-landing-float">
         <div className="rounded-[1.5rem] overflow-hidden bg-white shadow-2xl shadow-brand-primary/20 border border-white/80">
           {/* Browser chrome */}
           <div className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
@@ -63,7 +63,7 @@ export default function HeroMockup() {
       </div>
 
       {/* Floating cards */}
-      <div className="absolute -left-4 sm:-left-8 top-1/4 tramix-float-card p-3 rounded-2xl max-w-[140px] hidden sm:block animate-float-delayed">
+      <div className="absolute -left-4 sm:-left-8 top-1/4 landing-float-card p-3 rounded-2xl max-w-[140px] hidden sm:block animate-landing-float-delayed">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-brand-secondary/20 flex items-center justify-center">
             <Zap className="w-4 h-4 text-brand-secondary-dark" />
@@ -75,7 +75,7 @@ export default function HeroMockup() {
         </div>
       </div>
 
-      <div className="absolute -right-2 sm:-right-6 bottom-8 tramix-float-card p-3 rounded-2xl hidden sm:block animate-float">
+      <div className="absolute -right-2 sm:-right-6 bottom-8 landing-float-card p-3 rounded-2xl hidden sm:block animate-landing-float">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-brand-primary/15 flex items-center justify-center">
             <Bot className="w-4 h-4 text-brand-primary" />
@@ -87,7 +87,7 @@ export default function HeroMockup() {
         </div>
       </div>
 
-      <div className="absolute right-4 -top-2 tramix-float-card px-3 py-2 rounded-full flex items-center gap-1.5 animate-float-delayed">
+      <div className="absolute right-4 -top-2 landing-float-card px-3 py-2 rounded-full flex items-center gap-1.5 animate-landing-float-delayed">
         <Sparkles className="w-3.5 h-3.5 text-brand-secondary" />
         <span className="text-[10px] font-bold text-brand-primary-dark">{t.home.mockNew}</span>
       </div>

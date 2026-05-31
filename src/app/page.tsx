@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import { useSession } from "next-auth/react";
 import { useLanguage } from "@/components/LanguageContext";
 import HeroMockup from "@/components/home/HeroMockup";
+import SiteFooter from "@/components/home/SiteFooter";
+import "./landing.css";
 import {
   ArrowRight,
   Bot,
@@ -14,6 +17,12 @@ import {
   Sparkles,
   Zap,
 } from "lucide-react";
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-jakarta",
+  weight: ["600", "700", "800"],
+});
 
 export default function Home() {
   const { data: session } = useSession();
@@ -34,14 +43,15 @@ export default function Home() {
   const marqueeItems = t.home.trusted.split("·").map((s) => s.trim());
 
   return (
-    <div className="relative -mt-2 pb-4">
+    <div className={`landing-root ${jakarta.variable} relative -mt-2 pb-4`}>
+      <div className="landing-page-bg" aria-hidden="true" />
       {/* ─── HERO split ─── */}
       <section className="relative pt-6 pb-20 lg:pt-10 lg:pb-28">
         <div className="absolute top-20 right-0 w-[500px] h-[500px] bg-brand-secondary/15 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-brand-primary/10 rounded-full blur-[80px] pointer-events-none" />
 
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center relative z-10">
-          <div className="text-center lg:text-left animate-fade-up">
+          <div className="text-center lg:text-left animate-landing-fade-up">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 border border-brand-primary/15 text-brand-primary-dark text-xs font-bold mb-6 shadow-lg shadow-brand-primary/5 backdrop-blur-sm">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-secondary opacity-75" />
@@ -50,9 +60,9 @@ export default function Home() {
               {t.home.badge}
             </div>
 
-            <h1 className="tramix-display text-5xl sm:text-6xl xl:text-[4.25rem] font-extrabold text-brand-primary-dark leading-[1.05] mb-6">
+            <h1 className="landing-display text-5xl sm:text-6xl xl:text-[4.25rem] font-extrabold text-brand-primary-dark leading-[1.05] mb-6">
               {t.home.heading}{" "}
-              <span className="tramix-gradient-text">TRAMIX</span>
+              <span className="landing-gradient-text">TRAMIX</span>
             </h1>
 
             <p className="text-lg sm:text-xl text-slate-600 mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed">
@@ -63,7 +73,7 @@ export default function Home() {
               {session ? (
                 <Link
                   href="/dashboard"
-                  className="tramix-btn-primary group text-white font-bold text-base px-8 py-4 rounded-2xl hover:-translate-y-1 transition-all flex items-center justify-center gap-2"
+                  className="landing-btn-primary group text-white font-bold text-base px-8 py-4 rounded-2xl hover:-translate-y-1 transition-all flex items-center justify-center gap-2"
                 >
                   {t.home.ctaDashboard}
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -72,7 +82,7 @@ export default function Home() {
                 <>
                   <Link
                     href="/register"
-                    className="tramix-btn-primary group text-white font-bold text-base px-8 py-4 rounded-2xl hover:-translate-y-1 transition-all flex items-center justify-center gap-2 shadow-xl"
+                    className="landing-btn-primary group text-white font-bold text-base px-8 py-4 rounded-2xl hover:-translate-y-1 transition-all flex items-center justify-center gap-2 shadow-xl"
                   >
                     {t.home.ctaRegister}
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -90,8 +100,8 @@ export default function Home() {
             {/* Stats row */}
             <div className="grid grid-cols-3 gap-3 mt-12 max-w-md mx-auto lg:mx-0">
               {stats.map((s) => (
-                <div key={s.label} className="tramix-stat-card rounded-2xl px-3 py-4 text-center lg:text-left">
-                  <p className="tramix-display text-2xl sm:text-3xl font-extrabold tramix-gradient-text">{s.value}</p>
+                <div key={s.label} className="landing-stat-card rounded-2xl px-3 py-4 text-center lg:text-left">
+                  <p className="landing-display text-2xl sm:text-3xl font-extrabold landing-gradient-text">{s.value}</p>
                   <p className="text-[10px] sm:text-xs text-slate-500 font-semibold mt-1 leading-tight">{s.label}</p>
                 </div>
               ))}
@@ -106,9 +116,9 @@ export default function Home() {
 
       {/* ─── Marquee trust strip ─── */}
       <div className="overflow-hidden py-4 mb-16 border-y border-brand-primary/8 bg-white/40 backdrop-blur-sm rounded-2xl">
-        <div className="tramix-marquee-track">
+        <div className="landing-marquee-track">
           {[...marqueeItems, ...marqueeItems, ...marqueeItems, ...marqueeItems].map((item, i) => (
-            <span key={`${item}-${i}`} className="tramix-marquee-item flex items-center gap-3">
+            <span key={`${item}-${i}`} className="landing-marquee-item flex items-center gap-3">
               <Sparkles className="w-3.5 h-3.5 text-brand-secondary inline" />
               {item}
             </span>
@@ -119,7 +129,7 @@ export default function Home() {
       {/* ─── Bento features ─── */}
       <section className="mb-24">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="tramix-display text-3xl sm:text-4xl font-extrabold text-brand-primary-dark mb-3">
+          <h2 className="landing-display text-3xl sm:text-4xl font-extrabold text-brand-primary-dark mb-3">
             {t.home.bentoTitle}
           </h2>
           <p className="text-slate-600 text-lg">{t.home.bentoSubtitle}</p>
@@ -127,7 +137,7 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4 auto-rows-[minmax(140px,auto)]">
           {/* Large highlight */}
-          <article className="md:col-span-4 md:row-span-2 tramix-bento-highlight rounded-3xl p-8 sm:p-10 relative overflow-hidden group">
+          <article className="md:col-span-4 md:row-span-2 landing-bento-highlight rounded-3xl p-8 sm:p-10 relative overflow-hidden group">
             <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-700" />
             <div className="absolute top-6 right-6 w-20 h-20 border border-white/20 rounded-2xl rotate-12 opacity-40" />
             <div className="relative z-10 h-full flex flex-col justify-between min-h-[220px]">
@@ -135,14 +145,14 @@ export default function Home() {
                 <LayoutGrid className="w-7 h-7 text-brand-secondary" />
               </div>
               <div>
-                <h3 className="tramix-display text-2xl sm:text-3xl font-bold mb-3">{t.home.feature1Title}</h3>
+                <h3 className="landing-display text-2xl sm:text-3xl font-bold mb-3">{t.home.feature1Title}</h3>
                 <p className="text-white/80 text-base max-w-md leading-relaxed">{t.home.feature1Desc}</p>
               </div>
             </div>
           </article>
 
           {/* AI card */}
-          <article className="md:col-span-2 tramix-card rounded-3xl p-6 hover:-translate-y-1 transition-all duration-300 group border-brand-secondary/20">
+          <article className="md:col-span-2 landing-card rounded-3xl p-6 hover:-translate-y-1 transition-all duration-300 group border-brand-secondary/20">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-secondary/30 to-brand-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <Bot className="w-6 h-6 text-brand-primary" />
             </div>
@@ -151,7 +161,7 @@ export default function Home() {
           </article>
 
           {/* Map card */}
-          <article className="md:col-span-2 tramix-card rounded-3xl p-6 hover:-translate-y-1 transition-all duration-300 group">
+          <article className="md:col-span-2 landing-card rounded-3xl p-6 hover:-translate-y-1 transition-all duration-300 group">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-primary/15 to-brand-secondary/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
               <MapPin className="w-6 h-6 text-brand-primary" />
             </div>
@@ -160,7 +170,7 @@ export default function Home() {
           </article>
 
           {/* Accessibility wide */}
-          <article className="md:col-span-4 tramix-card rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-6 hover:-translate-y-1 transition-all bg-gradient-to-r from-white to-brand-secondary/5">
+          <article className="md:col-span-4 landing-card rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-6 hover:-translate-y-1 transition-all bg-gradient-to-r from-white to-brand-secondary/5">
             <div className="w-14 h-14 shrink-0 rounded-2xl bg-brand-primary/10 flex items-center justify-center">
               <Shield className="w-7 h-7 text-brand-primary" />
             </div>
@@ -176,7 +186,7 @@ export default function Home() {
       <section id="como-funciona" className="mb-24 scroll-mt-28">
         <div className="text-center mb-14">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-secondary-dark">Process</span>
-          <h2 className="tramix-display text-3xl sm:text-4xl font-extrabold text-brand-primary-dark mt-2 mb-3">
+          <h2 className="landing-display text-3xl sm:text-4xl font-extrabold text-brand-primary-dark mt-2 mb-3">
             {t.home.howTitle}
           </h2>
           <p className="text-slate-600 text-lg max-w-lg mx-auto">{t.home.howSubtitle}</p>
@@ -187,9 +197,9 @@ export default function Home() {
           {steps.map((step) => (
             <article
               key={step.num}
-              className="relative tramix-card rounded-3xl p-8 text-center hover:-translate-y-2 transition-all duration-300 group"
+              className="relative landing-card rounded-3xl p-8 text-center hover:-translate-y-2 transition-all duration-300 group"
             >
-              <span className="tramix-step-num tramix-display inline-flex w-12 h-12 rounded-2xl items-center justify-center text-sm font-extrabold mb-6">
+              <span className="landing-step-num landing-display inline-flex w-12 h-12 rounded-2xl items-center justify-center text-sm font-extrabold mb-6">
                 {step.num}
               </span>
               <h3 className="font-bold text-xl text-brand-primary-dark mb-3">{step.title}</h3>
@@ -200,9 +210,9 @@ export default function Home() {
       </section>
 
       {/* ─── CTA band ─── */}
-      <section className="tramix-cta-band rounded-[2rem] p-10 sm:p-14 text-center text-white mb-8">
+      <section className="landing-cta-band rounded-[2rem] p-10 sm:p-14 text-center text-white mb-8">
         <div className="relative z-10 max-w-2xl mx-auto">
-          <h2 className="tramix-display text-3xl sm:text-4xl font-extrabold mb-4">{t.home.ctaBandTitle}</h2>
+          <h2 className="landing-display text-3xl sm:text-4xl font-extrabold mb-4">{t.home.ctaBandTitle}</h2>
           <p className="text-white/85 text-lg mb-8 leading-relaxed">{t.home.ctaBandSubtitle}</p>
           {session ? (
             <Link
@@ -231,6 +241,8 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      <SiteFooter />
     </div>
   );
 }
