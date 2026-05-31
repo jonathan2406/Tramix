@@ -28,15 +28,16 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-brand-bg p-4 relative overflow-hidden">
-      {/* Decorative blobs for auth */}
-      <div className="absolute top-0 left-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-      <div className="absolute bottom-0 right-0 w-64 h-64 bg-brand-secondary/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
-
-      <div className="max-w-md w-full bg-white/80 backdrop-blur-md rounded-[2rem] shadow-2xl shadow-brand-primary/5 p-10 border border-white relative z-10">
+    <div className="min-h-[80vh] flex items-center justify-center p-4 relative">
+      <div className="max-w-md w-full tramix-glass tramix-card rounded-[2rem] p-10 relative z-10">
         <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-primary/15 to-brand-secondary/25 mb-5 mx-auto">
+            <span className="text-2xl font-black text-brand-primary">T</span>
+          </div>
           <h1 className="text-4xl font-black text-brand-primary-dark tracking-tight">{t.login.title}</h1>
-          <p className="text-slate-500 mt-3 font-medium">{t.login.subtitle} <span className="text-brand-primary font-bold">TRAMIX</span></p>
+          <p className="text-slate-600 mt-3">{t.login.subtitle}{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-secondary font-bold">TRAMIX</span>
+          </p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
@@ -68,7 +69,7 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full bg-brand-primary text-white font-bold py-4 rounded-xl hover:bg-brand-primary-dark transition-all shadow-lg shadow-brand-primary/20 active:scale-[0.98]"
+            className="w-full tramix-btn-primary text-white font-bold py-4 rounded-2xl hover:-translate-y-0.5 transition-all active:scale-[0.98]"
           >
             {t.login.submitButton}
           </button>

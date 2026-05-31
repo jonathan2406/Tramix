@@ -6,7 +6,7 @@ import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   title: "TRAMIX",
@@ -25,11 +25,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className="scroll-smooth">
-      <body className={`${inter.className} bg-brand-bg antialiased`} suppressHydrationWarning>
+      <body className={`${inter.className} ${inter.variable} bg-brand-bg antialiased`} suppressHydrationWarning>
+        <div className="tramix-page-bg" aria-hidden="true" />
         <Providers>
           <LanguageProvider>
             <NavBar />
-            <main className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+            <main className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 relative">
               {children}
             </main>
             <AccessibilityControls />

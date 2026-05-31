@@ -61,14 +61,14 @@ export default function PointsOfAttentionSection({ puntos }: { puntos?: Punto[] 
     : groupedData.find(g => g.category === activeFilter);
 
   return (
-    <section className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
-      <div className="flex items-center gap-3 mb-8">
-        <div className="w-12 h-12 bg-brand-primary/10 rounded-2xl flex items-center justify-center">
-          <MapPin className="text-brand-primary w-6 h-6" />
+    <section className="tramix-card rounded-3xl p-8 md:p-10">
+      <div className="flex items-center gap-4 mb-8">
+        <div className="w-14 h-14 bg-gradient-to-br from-brand-primary/15 to-brand-secondary/20 rounded-2xl flex items-center justify-center shadow-inner">
+          <MapPin className="text-brand-primary w-7 h-7" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Puntos de Atención</h2>
-          <p className="text-slate-500 text-sm">Encuentra dónde realizar tus trámites presenciales</p>
+          <h2 className="text-2xl md:text-3xl font-black text-brand-primary-dark tracking-tight">Puntos de Atención</h2>
+          <p className="text-slate-600 text-sm mt-1">Encuentra dónde realizar tus trámites presenciales</p>
         </div>
       </div>
 
@@ -77,8 +77,8 @@ export default function PointsOfAttentionSection({ puntos }: { puntos?: Punto[] 
           <button
             key={g.id}
             onClick={() => setActiveFilter(g.category)}
-            className={`px-6 py-3 rounded-xl font-bold text-sm whitespace-nowrap transition-all flex items-center gap-2 border-2
-              ${activeFilter === g.category ? 'bg-brand-primary text-white border-brand-primary shadow-lg shadow-brand-primary/20 scale-105' : 'bg-slate-50 text-slate-600 border-transparent hover:bg-slate-100 hover:border-slate-200'}
+            className={`px-6 py-3 rounded-2xl font-bold text-sm whitespace-nowrap transition-all flex items-center gap-2 border-2
+              ${activeFilter === g.category ? 'tramix-btn-primary text-white border-transparent shadow-lg scale-[1.02]' : 'bg-slate-50/80 text-slate-600 border-slate-200/60 hover:border-brand-primary/30 hover:text-brand-primary-dark'}
             `}
           >
             <g.icon className="w-4 h-4" />
@@ -91,7 +91,7 @@ export default function PointsOfAttentionSection({ puntos }: { puntos?: Punto[] 
         {filtered?.centers.map((center: any, idx: number) => {
           const isInactive = center.status !== "activo";
           return (
-            <div key={idx} className={`relative bg-slate-50 rounded-2xl p-6 border border-slate-100 hover:border-brand-primary/20 transition-all group hover:bg-white hover:shadow-xl ${isInactive ? "opacity-60 grayscale hover:opacity-100 hover:grayscale-0" : ""}`}>
+            <div key={idx} className={`relative bg-gradient-to-br from-slate-50 to-white rounded-2xl p-6 border border-slate-100/80 hover:border-brand-primary/25 transition-all group hover:shadow-xl hover:shadow-brand-primary/5 hover:-translate-y-0.5 ${isInactive ? "opacity-60 grayscale hover:opacity-100 hover:grayscale-0" : ""}`}>
               {isInactive && (
                 <div className="absolute top-4 right-4 bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold border border-red-200 shadow-sm z-10">
                   Fuera de Servicio

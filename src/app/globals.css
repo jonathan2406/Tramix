@@ -18,15 +18,86 @@
   --color-brand-secondary: var(--brand-secondary);
   --color-brand-secondary-dark: var(--brand-secondary-dark);
   --color-brand-bg: var(--brand-bg);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter, ui-sans-serif, system-ui, sans-serif);
+  --font-mono: ui-monospace, monospace;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-fade-up: fade-up 0.6s ease-out forwards;
+  --animate-shimmer: shimmer 2.5s linear infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
 }
 
 /* Tema de la marca TRAMIX (Forzar Claro) */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+.tramix-page-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 50% at 10% -10%, color-mix(in srgb, var(--brand-primary) 18%, transparent), transparent),
+    radial-gradient(ellipse 60% 40% at 90% 0%, color-mix(in srgb, var(--brand-secondary) 22%, transparent), transparent),
+    radial-gradient(ellipse 50% 50% at 50% 100%, color-mix(in srgb, var(--brand-primary) 8%, transparent), transparent),
+    var(--brand-bg);
+}
+
+.tramix-glass {
+  background: color-mix(in srgb, white 75%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.tramix-card {
+  background: white;
+  border: 1px solid color-mix(in srgb, var(--brand-primary) 10%, transparent);
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--brand-primary) 6%, transparent),
+    0 12px 40px -12px color-mix(in srgb, var(--brand-primary) 12%, transparent);
+}
+
+.tramix-btn-primary {
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-dark) 100%);
+  box-shadow:
+    0 4px 14px color-mix(in srgb, var(--brand-primary) 35%, transparent),
+    inset 0 1px 0 color-mix(in srgb, white 20%, transparent);
+}
+
+.tramix-btn-primary:hover {
+  box-shadow:
+    0 8px 24px color-mix(in srgb, var(--brand-primary) 45%, transparent),
+    inset 0 1px 0 color-mix(in srgb, white 25%, transparent);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* HU-15: Modo Alto Contraste */
