@@ -57,19 +57,17 @@ export default function ChatBot() {
       {/* Botón flotante lado inferior izquierdo */}
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 left-6 z-50 p-[3px] rounded-full bg-gradient-to-br from-brand-primary via-brand-secondary to-brand-primary-dark shadow-2xl shadow-brand-primary/40 hover:scale-110 transition-all ${isOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"}`}
+        className={`fixed bottom-6 left-6 z-50 bg-brand-primary text-white p-4 rounded-full shadow-xl hover:scale-105 transition-transform ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
         title="Asistente TRAMIX"
       >
-        <span className="flex items-center justify-center w-14 h-14 rounded-full bg-brand-primary-dark text-white">
-          <MessageSquare className="w-7 h-7" />
-        </span>
+        <MessageSquare className="w-7 h-7" />
       </button>
 
       {/* Ventana de Chat */}
-      <div className={`fixed bottom-6 left-6 z-50 w-80 md:w-96 h-[600px] max-h-[85vh] bg-white rounded-3xl shadow-2xl shadow-brand-primary/20 border border-brand-primary/10 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-left ${isOpen ? "scale-100 opacity-100 translate-y-0" : "scale-0 opacity-0 translate-y-20 pointer-events-none"}`}>
+      <div className={`fixed bottom-6 left-6 z-50 w-80 md:w-96 h-[600px] max-h-[85vh] bg-white rounded-2xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden transition-all duration-300 origin-bottom-left ${isOpen ? 'scale-100 opacity-100 translate-y-0' : 'scale-0 opacity-0 translate-y-20 pointer-events-none'}`}>
         
         {/* Header */}
-        <div className="bg-gradient-to-r from-brand-primary-dark via-brand-primary to-brand-primary p-4 flex items-center justify-between">
+        <div className="bg-brand-primary p-4 flex items-center justify-between">
           <div className="flex items-center gap-2 text-white">
             <Bot className="w-6 h-6" />
             <h3 className="font-bold">Asistente TRAMIX</h3>

@@ -95,16 +95,9 @@ export default function DashboardClient({ categorias, tramites, userAge, userRol
   return (
     <div className="space-y-6">
       {/* Saludo personalizado */}
-      <div className="relative overflow-hidden rounded-3xl tramix-card p-8 md:p-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/8 via-transparent to-brand-secondary/12 pointer-events-none" />
-        <div className="absolute -right-16 -top-16 w-48 h-48 bg-brand-secondary/20 rounded-full blur-3xl" />
-        <div className="relative">
-          <p className="text-sm font-semibold uppercase tracking-wider text-brand-primary mb-2">TRAMIX</p>
-          <h1 className="text-3xl md:text-4xl font-black text-brand-primary-dark tracking-tight">
-            {t.dashboard.greeting(userName)}
-          </h1>
-          <p className="text-slate-600 mt-3 text-lg max-w-2xl">{t.dashboard.subtitle}</p>
-        </div>
+      <div className="bg-white rounded-2xl shadow-sm p-8 border border-gray-100">
+        <h1 className="text-3xl font-bold text-gray-900">{t.dashboard.greeting(userName)}</h1>
+        <p className="text-gray-500 mt-2">{t.dashboard.subtitle}</p>
       </div>
 
       <div className="space-y-8">
@@ -128,22 +121,22 @@ export default function DashboardClient({ categorias, tramites, userAge, userRol
       )}
 
       {/* HU-07 Search Component */}
-      <div className="tramix-card p-6 md:p-8 rounded-3xl relative">
-        <label className="block text-sm font-bold text-brand-primary-dark mb-3">{t.dashboard.searchLabel}</label>
-        <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3 relative">
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative">
+        <label className="block text-sm font-semibold text-gray-700 mb-2">{t.dashboard.searchLabel}</label>
+        <form onSubmit={handleSearch} className="flex gap-2 relative">
           <div className="relative flex-1">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-brand-primary/50" />
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-gray-400" />
             </div>
             <input
               type="text"
               placeholder={t.dashboard.searchPlaceholder}
               value={searchCode}
               onChange={(e) => setSearchCode(e.target.value)}
-              className={`block w-full pl-12 pr-4 py-4 border-2 ${searchError ? "border-red-400 bg-red-50" : "border-slate-200/80 bg-slate-50/50"} rounded-2xl focus:ring-2 focus:ring-brand-primary/25 focus:border-brand-primary focus:bg-white transition outline-none`}
+              className={`block w-full pl-10 pr-3 py-4 border ${searchError ? "border-red-500 bg-red-50" : "border-slate-200"} rounded-xl focus:ring-brand-primary focus:border-brand-primary transition`}
             />
           </div>
-          <button type="submit" className="tramix-btn-primary text-white px-8 py-4 rounded-2xl min-h-[44px] min-w-[44px] font-bold hover:-translate-y-0.5 transition-all">
+          <button type="submit" className="bg-brand-primary text-white px-6 py-4 rounded-xl min-h-[44px] min-w-[44px] font-semibold hover:bg-brand-primary-dark transition-all transform hover:scale-[1.02] active:scale-95 shadow-md">
             <span className="hidden md:inline">{t.dashboard.searchButton}</span>
             <Search className="w-5 h-5 md:hidden" />
           </button>
@@ -157,16 +150,16 @@ export default function DashboardClient({ categorias, tramites, userAge, userRol
 
       {/* HU-16: Filtro Tipo de Trámite */}
       <section>
-        <h2 className="text-xl font-bold text-brand-primary-dark mb-4">{t.dashboard.filterTitle}</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">{t.dashboard.filterTitle}</h2>
         <div className="flex gap-3 flex-wrap">
           {(["todos", "ciudadano", "financiero"] as const).map((tipo) => (
             <button
               key={tipo}
               onClick={() => setTypeFilter(tipo)}
-              className={`px-6 py-3 rounded-2xl font-bold text-sm transition-all ${
+              className={`px-6 py-2.5 rounded-xl font-bold text-sm transition ${
                 typeFilter === tipo
-                  ? "bg-gradient-to-r from-brand-secondary to-brand-secondary-dark text-brand-primary-dark shadow-lg shadow-brand-secondary/25 scale-[1.02]"
-                  : "tramix-card text-slate-600 hover:border-brand-primary/20 hover:text-brand-primary-dark"
+                  ? "bg-brand-secondary text-brand-primary-dark shadow-md"
+                  : "bg-white border-2 border-gray-100 text-gray-500 hover:border-gray-300"
               }`}
             >
               {tipo === "todos" ? `📄 ${t.dashboard.filterAll}` : tipo === "ciudadano" ? `💳 ${t.dashboard.filterCitizen}` : `🏦 ${t.dashboard.filterFinancial}`}
@@ -177,11 +170,11 @@ export default function DashboardClient({ categorias, tramites, userAge, userRol
 
       {/* HU-06 Categories Grid */}
       <section>
-        <h2 className="text-xl font-bold text-brand-primary-dark mb-4">{t.dashboard.categoriesTitle}</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">{t.dashboard.categoriesTitle}</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <button
             onClick={() => setSelectedCat(null)}
-            className={`p-6 rounded-2xl min-h-[44px] min-w-[44px] border-2 transition-all flex flex-col items-center justify-center text-center ${!selectedCat ? "bg-gradient-to-br from-brand-primary/15 to-brand-secondary/10 border-brand-primary shadow-md shadow-brand-primary/10" : "tramix-card border-transparent hover:border-brand-primary/25 hover:-translate-y-0.5"}`}
+            className={`p-6 rounded-2xl min-h-[44px] min-w-[44px] border-2 transition-all flex flex-col items-center justify-center text-center ${!selectedCat ? "bg-brand-primary/10 border-brand-primary" : "bg-white border-transparent hover:border-gray-200"} shadow-sm`}
           >
             <Icons.LayoutGrid className={`w-8 h-8 mb-2 ${!selectedCat ? "text-brand-primary" : "text-slate-400"}`} />
             <span className="font-semibold text-slate-800">{t.dashboard.categoryAll}</span>
@@ -191,7 +184,7 @@ export default function DashboardClient({ categorias, tramites, userAge, userRol
             <button
               key={cat.id}
               onClick={() => setSelectedCat(cat.id)}
-              className={`p-6 rounded-2xl min-h-[44px] min-w-[44px] border-2 transition-all flex flex-col items-center justify-center text-center ${selectedCat === cat.id ? "bg-gradient-to-br from-brand-primary/15 to-brand-secondary/10 border-brand-primary shadow-md shadow-brand-primary/10" : "tramix-card border-transparent hover:border-brand-primary/25 hover:-translate-y-0.5"}`}
+              className={`p-6 rounded-2xl min-h-[44px] min-w-[44px] border-2 transition-all flex flex-col items-center justify-center text-center ${selectedCat === cat.id ? "bg-brand-primary/10 border-brand-primary" : "bg-white border-transparent hover:border-gray-200"} shadow-sm`}
             >
               <IconComponent name={cat.icon} />
               <span className="font-semibold text-slate-800">{cat.name}</span>
@@ -224,7 +217,7 @@ export default function DashboardClient({ categorias, tramites, userAge, userRol
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredTramites.map(tramite => (
-              <Link href={`/tramites/${tramite.id}`} key={tramite.id} className="group tramix-card rounded-2xl p-6 min-h-[44px] min-w-[44px] hover:border-brand-primary/30 transition-all flex flex-col hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-primary/10">
+              <Link href={`/tramites/${tramite.id}`} key={tramite.id} className="group bg-white rounded-2xl p-6 border border-gray-100 shadow-sm min-h-[44px] min-w-[44px] hover:shadow-lg hover:border-brand-primary/30 transition-all flex flex-col hover:-translate-y-1">
                 <div className="flex justify-between items-start mb-4">
                   <span className="px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-xs font-bold tracking-wider">{tramite.code}</span>
                   {tramite.isOnline && <span className="px-3 py-1 bg-brand-secondary/20 text-brand-secondary-dark rounded-lg text-xs font-bold ring-1 ring-brand-secondary/30">100% Online</span>}
