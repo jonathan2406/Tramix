@@ -8,6 +8,8 @@
   --brand-secondary: #89b383;
   --brand-secondary-dark: #78a06c;
   --brand-bg: #fdfdfb;
+  --brand-surface: #ffffff;
+  --brand-line: rgba(81, 112, 138, 0.16);
 }
 
 @theme inline {
@@ -26,7 +28,81 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+}
+
+.site-nav {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--brand-primary-dark) 90%, black), var(--brand-primary));
+  border-bottom: 1px solid color-mix(in srgb, white 14%, transparent);
+  box-shadow: 0 12px 34px -24px color-mix(in srgb, var(--brand-primary-dark) 75%, transparent);
+  backdrop-filter: blur(14px);
+}
+
+.site-nav-link,
+.site-nav-button,
+.site-nav-admin,
+.site-nav-cta {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.site-nav-link {
+  padding: 0.5rem 0.65rem;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.site-nav-link:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.site-nav-button,
+.site-nav-admin {
+  padding: 0.5rem 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(62, 88, 108, 0.42);
+  color: white;
+}
+
+.site-nav-admin {
+  color: #f8e6a0;
+}
+
+.site-nav-button:hover,
+.site-nav-admin:hover {
+  background: rgba(62, 88, 108, 0.62);
+}
+
+.site-nav-cta {
+  padding: 0.55rem 1rem;
+  background: var(--brand-secondary);
+  color: var(--brand-primary-dark);
+  box-shadow: 0 10px 24px -18px rgba(0, 0, 0, 0.45);
+}
+
+.site-nav-cta:hover {
+  background: var(--brand-secondary-dark);
+  transform: translateY(-1px);
+}
+
+.site-language-switch {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--brand-secondary) 72%, white);
+  outline-offset: 3px;
 }
 
 /* HU-15: Modo Alto Contraste */
@@ -34,6 +110,8 @@ body {
   --background: #000000;
   --foreground: #ffffff;
   --brand-bg: #000000;
+  --brand-surface: #111111;
+  --brand-line: #ffff00;
   background-color: #000000 !important;
   color: #ffffff !important;
 }

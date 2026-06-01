@@ -2,17 +2,12 @@
 
 @keyframes landing-float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
-}
-
-@keyframes landing-float-delayed {
-  0%, 100% { transform: translateY(4px); }
   50% { transform: translateY(-8px); }
 }
 
-@keyframes landing-pulse-soft {
-  0%, 100% { opacity: 0.45; transform: scale(1); }
-  50% { opacity: 0.75; transform: scale(1.03); }
+@keyframes landing-float-delayed {
+  0%, 100% { transform: translateY(3px); }
+  50% { transform: translateY(-6px); }
 }
 
 @keyframes landing-marquee {
@@ -23,7 +18,7 @@
 @keyframes landing-fade-up {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;
@@ -33,6 +28,10 @@
 
 .landing-root {
   --font-display: var(--font-jakarta, ui-sans-serif, system-ui, sans-serif);
+  --landing-surface: #ffffff;
+  --landing-soft: #f3f7f4;
+  --landing-line: color-mix(in srgb, var(--brand-primary) 14%, transparent);
+  --landing-shadow: 0 18px 50px -30px color-mix(in srgb, var(--brand-primary-dark) 42%, transparent);
   position: relative;
 }
 
@@ -43,83 +42,153 @@
   pointer-events: none;
   border-radius: inherit;
   background:
-    radial-gradient(ellipse 80% 50% at 10% -10%, color-mix(in srgb, var(--brand-primary) 18%, transparent), transparent),
-    radial-gradient(ellipse 60% 40% at 90% 0%, color-mix(in srgb, var(--brand-secondary) 22%, transparent), transparent),
-    radial-gradient(ellipse 50% 50% at 50% 100%, color-mix(in srgb, var(--brand-primary) 8%, transparent), transparent);
+    linear-gradient(180deg, color-mix(in srgb, var(--brand-bg) 96%, var(--brand-secondary)) 0%, var(--brand-bg) 48%, #f7faf8 100%),
+    repeating-linear-gradient(135deg, color-mix(in srgb, var(--brand-primary) 8%, transparent) 0 1px, transparent 1px 18px);
 }
 
 .landing-page-bg::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(color-mix(in srgb, var(--brand-primary) 12%, transparent) 1px, transparent 1px);
-  background-size: 28px 28px;
-  mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
-  opacity: 0.5;
+  background:
+    linear-gradient(90deg, transparent 0%, color-mix(in srgb, white 50%, transparent) 24%, transparent 48%),
+    radial-gradient(ellipse 70% 35% at 50% 0%, color-mix(in srgb, var(--brand-secondary) 22%, transparent), transparent 70%);
+  opacity: 0.9;
 }
 
 .landing-display {
   font-family: var(--font-display);
-  letter-spacing: -0.03em;
+  letter-spacing: 0;
 }
 
 .landing-gradient-text {
-  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-dark) 45%, var(--brand-secondary) 100%);
+  background: linear-gradient(135deg, var(--brand-primary-dark) 0%, var(--brand-primary) 48%, var(--brand-secondary-dark) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
+.landing-hero-section {
+  isolation: isolate;
+}
+
+.landing-hero-frame {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--brand-primary) 7%, transparent);
+  border-radius: 1.5rem;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, white 70%, transparent), color-mix(in srgb, var(--brand-secondary) 7%, transparent)),
+    linear-gradient(90deg, transparent 0 72%, color-mix(in srgb, var(--brand-primary) 9%, transparent) 72% 72.5%, transparent 72.5%);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, white 80%, transparent);
+}
+
+.landing-eyebrow,
+.landing-trust-strip {
+  background: color-mix(in srgb, white 78%, var(--brand-secondary) 6%);
+  border: 1px solid var(--landing-line);
+  color: var(--brand-primary-dark);
+  box-shadow: 0 10px 28px -22px color-mix(in srgb, var(--brand-primary-dark) 45%, transparent);
+}
+
+.landing-mockup-shadow {
+  position: absolute;
+  inset: 8% 4% -6%;
+  border-radius: 1.5rem;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--brand-primary) 18%, transparent), color-mix(in srgb, var(--brand-secondary) 22%, transparent));
+  filter: blur(28px);
+  opacity: 0.75;
+}
+
 .landing-mockup-shell {
-  background: linear-gradient(145deg, var(--brand-primary), var(--brand-secondary));
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--brand-primary-dark) 92%, white), var(--brand-primary)),
+    var(--brand-primary);
   box-shadow:
-    0 25px 60px -15px color-mix(in srgb, var(--brand-primary) 45%, transparent),
-    0 0 0 1px color-mix(in srgb, white 30%, transparent) inset;
+    0 24px 60px -26px color-mix(in srgb, var(--brand-primary-dark) 52%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, white 36%, transparent);
+}
+
+.landing-mockup-body {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--brand-bg) 88%, white) 0%, white 100%),
+    repeating-linear-gradient(90deg, transparent 0 23px, color-mix(in srgb, var(--brand-primary) 5%, transparent) 23px 24px);
 }
 
 .landing-float-card {
-  background: color-mix(in srgb, white 92%, transparent);
+  background: color-mix(in srgb, white 92%, var(--brand-bg));
   backdrop-filter: blur(12px);
-  border: 1px solid color-mix(in srgb, var(--brand-primary) 12%, transparent);
-  box-shadow: 0 12px 32px -8px color-mix(in srgb, var(--brand-primary) 20%, transparent);
+  border: 1px solid var(--landing-line);
+  box-shadow: 0 14px 34px -22px color-mix(in srgb, var(--brand-primary-dark) 50%, transparent);
 }
 
 .landing-stat-card {
-  background: linear-gradient(160deg, white 0%, color-mix(in srgb, var(--brand-bg) 80%, white) 100%);
-  border: 1px solid color-mix(in srgb, var(--brand-primary) 10%, transparent);
-  box-shadow: 0 8px 30px -12px color-mix(in srgb, var(--brand-primary) 15%, transparent);
+  background:
+    linear-gradient(160deg, white 0%, color-mix(in srgb, var(--brand-bg) 82%, var(--brand-secondary) 6%) 100%);
+  border: 1px solid var(--landing-line);
+  box-shadow: var(--landing-shadow);
 }
 
 .landing-bento-highlight {
-  background: linear-gradient(145deg, var(--brand-primary-dark) 0%, var(--brand-primary) 50%, color-mix(in srgb, var(--brand-secondary) 40%, var(--brand-primary)) 100%);
+  background:
+    linear-gradient(145deg, var(--brand-primary-dark) 0%, var(--brand-primary) 56%, color-mix(in srgb, var(--brand-secondary) 28%, var(--brand-primary)) 100%);
   color: white;
+  box-shadow: var(--landing-shadow);
+}
+
+.landing-bento-mark {
+  position: absolute;
+  inset: auto -8% -16% auto;
+  width: 52%;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, white 20%, transparent);
+  border-radius: 2rem;
+  transform: rotate(10deg);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, white 10%, transparent), transparent),
+    repeating-linear-gradient(90deg, color-mix(in srgb, white 12%, transparent) 0 1px, transparent 1px 16px);
 }
 
 .landing-step-num {
-  background: linear-gradient(135deg, var(--brand-secondary), var(--brand-secondary-dark));
+  background: linear-gradient(135deg, var(--brand-secondary), color-mix(in srgb, var(--brand-secondary-dark) 86%, white));
   color: var(--brand-primary-dark);
-  box-shadow: 0 4px 14px color-mix(in srgb, var(--brand-secondary) 40%, transparent);
+  box-shadow: 0 10px 24px -18px color-mix(in srgb, var(--brand-secondary-dark) 70%, transparent);
+}
+
+.landing-section-kicker {
+  color: var(--brand-secondary-dark);
 }
 
 .landing-cta-band {
-  background: linear-gradient(120deg, var(--brand-primary-dark) 0%, var(--brand-primary) 40%, color-mix(in srgb, var(--brand-secondary) 35%, var(--brand-primary)) 100%);
+  background:
+    linear-gradient(120deg, var(--brand-primary-dark) 0%, var(--brand-primary) 50%, color-mix(in srgb, var(--brand-secondary) 30%, var(--brand-primary)) 100%);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 22px 60px -34px color-mix(in srgb, var(--brand-primary-dark) 70%, transparent);
 }
 
 .landing-cta-band::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.12), transparent 50%),
-    radial-gradient(circle at 80% 80%, color-mix(in srgb, var(--brand-secondary) 30%, transparent), transparent 45%);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, white 12%, transparent) 0 1px, transparent 1px 18px),
+    linear-gradient(90deg, color-mix(in srgb, white 8%, transparent), transparent 58%);
   pointer-events: none;
+}
+
+.landing-footer {
+  border-top: 1px solid var(--landing-line);
+  background: color-mix(in srgb, white 78%, var(--brand-bg));
+  backdrop-filter: blur(12px);
 }
 
 .landing-marquee-track {
   display: flex;
   width: max-content;
-  animation: landing-marquee 28s linear infinite;
+  animation: landing-marquee 30s linear infinite;
 }
 
 .landing-marquee-item {
@@ -127,30 +196,52 @@
   padding: 0 2rem;
   font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--brand-primary) 55%, transparent);
+  color: color-mix(in srgb, var(--brand-primary) 65%, var(--foreground));
 }
 
 .landing-card {
-  background: white;
-  border: 1px solid color-mix(in srgb, var(--brand-primary) 10%, transparent);
-  box-shadow:
-    0 1px 2px color-mix(in srgb, var(--brand-primary) 6%, transparent),
-    0 12px 40px -12px color-mix(in srgb, var(--brand-primary) 12%, transparent);
+  background: color-mix(in srgb, white 96%, var(--brand-bg));
+  border: 1px solid var(--landing-line);
+  box-shadow: var(--landing-shadow);
+}
+
+.landing-card,
+.landing-stat-card,
+.landing-btn-primary,
+.landing-btn-secondary,
+.landing-cta-link {
+  outline-offset: 3px;
 }
 
 .landing-btn-primary {
   background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-dark) 100%);
   box-shadow:
-    0 4px 14px color-mix(in srgb, var(--brand-primary) 35%, transparent),
-    inset 0 1px 0 color-mix(in srgb, white 20%, transparent);
+    0 14px 30px -18px color-mix(in srgb, var(--brand-primary-dark) 70%, transparent),
+    inset 0 1px 0 color-mix(in srgb, white 22%, transparent);
 }
 
 .landing-btn-primary:hover {
   box-shadow:
-    0 8px 24px color-mix(in srgb, var(--brand-primary) 45%, transparent),
-    inset 0 1px 0 color-mix(in srgb, white 25%, transparent);
+    0 16px 34px -18px color-mix(in srgb, var(--brand-primary-dark) 78%, transparent),
+    inset 0 1px 0 color-mix(in srgb, white 26%, transparent);
+}
+
+.landing-btn-secondary {
+  color: var(--brand-primary-dark);
+  background: color-mix(in srgb, white 88%, var(--brand-bg));
+  border: 1px solid var(--landing-line);
+  box-shadow: 0 12px 28px -24px color-mix(in srgb, var(--brand-primary-dark) 60%, transparent);
+}
+
+.landing-btn-secondary:hover {
+  border-color: color-mix(in srgb, var(--brand-secondary-dark) 50%, transparent);
+  background: white;
+}
+
+.landing-cta-link {
+  box-shadow: 0 14px 32px -20px color-mix(in srgb, black 42%, transparent);
 }
 
 .animate-landing-fade-up {
@@ -158,13 +249,56 @@
 }
 
 .animate-landing-float {
-  animation: landing-float 6s ease-in-out infinite;
+  animation: landing-float 7s ease-in-out infinite;
 }
 
 .animate-landing-float-delayed {
-  animation: landing-float-delayed 7s ease-in-out infinite;
+  animation: landing-float-delayed 8s ease-in-out infinite;
 }
 
-.animate-landing-pulse-soft {
-  animation: landing-pulse-soft 4s ease-in-out infinite;
+@media (prefers-reduced-motion: reduce) {
+  .landing-marquee-track,
+  .animate-landing-fade-up,
+  .animate-landing-float,
+  .animate-landing-float-delayed {
+    animation: none;
+  }
+}
+
+[data-contrast="high"] .landing-page-bg,
+[data-contrast="high"] .landing-hero-frame,
+[data-contrast="high"] .landing-mockup-shadow,
+[data-contrast="high"] .landing-bento-mark,
+[data-contrast="high"] .landing-cta-band::before {
+  display: none;
+}
+
+[data-contrast="high"] .landing-card,
+[data-contrast="high"] .landing-stat-card,
+[data-contrast="high"] .landing-eyebrow,
+[data-contrast="high"] .landing-trust-strip,
+[data-contrast="high"] .landing-float-card,
+[data-contrast="high"] .landing-footer,
+[data-contrast="high"] .landing-mockup-body {
+  background: #111111 !important;
+  border: 2px solid #ffff00 !important;
+  box-shadow: none !important;
+}
+
+[data-contrast="high"] .landing-gradient-text,
+[data-contrast="high"] .landing-section-kicker {
+  background: none !important;
+  color: #ffff00 !important;
+}
+
+[data-contrast="high"] .landing-bento-highlight,
+[data-contrast="high"] .landing-cta-band,
+[data-contrast="high"] .landing-mockup-shell,
+[data-contrast="high"] .landing-btn-primary,
+[data-contrast="high"] .landing-btn-secondary,
+[data-contrast="high"] .landing-step-num {
+  background: #000000 !important;
+  border: 2px solid #ffff00 !important;
+  box-shadow: none !important;
+  color: #ffffff !important;
 }
