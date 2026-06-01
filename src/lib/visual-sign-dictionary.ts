@@ -290,7 +290,6 @@ const wordAliases: Record<string, string> = {
   recomendadas: "recomendaciones",
   recomendado: "recomendaciones",
   registraduria: "registraduria",
-  registrar: "registro",
   inscribir: "inscribir",
   inscripcion: "inscribir",
   solicitud: "solicitud",
@@ -300,7 +299,6 @@ const wordAliases: Record<string, string> = {
   exterior: "exterior",
   militar: "militar",
   libreta: "libreta",
-  documentacion: "documentacion",
   educacion: "educacion",
   movilidad: "movilidad",
   salud: "salud",
@@ -310,9 +308,6 @@ const wordAliases: Record<string, string> = {
   encontrar: "encontrar",
   encuentra: "encontrar",
   encuentro: "encontrar",
-  consultar: "consultar",
-  consulta: "consultar",
-  dudas: "duda",
 };
 
 function dedupeSequence(sequence: VisualSignItem[]) {
