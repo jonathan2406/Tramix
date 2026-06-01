@@ -116,7 +116,7 @@ export default function VisualSignSupport() {
           aria-label="Ver apoyo visual"
           data-visual-sign-ignore
         >
-          Ver apoyo visual
+          Ver apoyo visual 🤟
         </button>
       )}
 
