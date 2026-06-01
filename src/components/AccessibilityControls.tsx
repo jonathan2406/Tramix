@@ -223,6 +223,17 @@ export default function AccessibilityControls() {
           )}
         </div>
 
+        {/* Lenguaje de señas */}
+        <div className="border-t border-gray-100 pt-2">
+          <button
+            type="button"
+            className="w-full text-left text-xs text-gray-600 leading-snug py-2 px-2 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+            aria-label="Para activar el lenguaje de señas, selecciona un texto y toca el icono de mano"
+          >
+            Para activar el lenguaje de señas selecciona un texto y toca el icono 🤟
+          </button>
+        </div>
+
         {/* Restablecer */}
         <button
           onClick={reset}
