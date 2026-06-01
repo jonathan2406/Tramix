@@ -1,24 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  /* Colores mejorados - Paleta moderna y coherente */
-  --background: #f8fafb;
-  --foreground: #0f172a;
-  --brand-primary: #4a6fa5;
-  --brand-primary-dark: #2d3f5a;
-  --brand-primary-light: #6b92c7;
-  --brand-secondary: #7ec987;
-  --brand-secondary-dark: #5d8860;
-  --brand-secondary-light: #a8e6b8;
-  --brand-accent: #f59e0b;
-  --brand-accent-light: #fcd34d;
-  --brand-success: #10b981;
-  --brand-warning: #f59e0b;
-  --brand-bg: #f8fafb;
-  --gradient-primary: linear-gradient(135deg, #4a6fa5 0%, #2d3f5a 100%);
-  --gradient-secondary: linear-gradient(135deg, #7ec987 0%, #5d8860 100%);
-  --gradient-mixed: linear-gradient(135deg, #4a6fa5 0%, #7ec987 100%);
-  --shadow-glow: 0 20px 60px -15px rgba(74, 111, 165, 0.3);
+  --background: #fdfdfb;
+  --foreground: #1e293b;
+  --brand-primary: #51708a;
+  --brand-primary-dark: #3e586c;
+  --brand-secondary: #89b383;
+  --brand-secondary-dark: #78a06c;
+  --brand-bg: #fdfdfb;
 }
 
 @theme inline {
@@ -26,12 +15,8 @@
   --color-foreground: var(--foreground);
   --color-brand-primary: var(--brand-primary);
   --color-brand-primary-dark: var(--brand-primary-dark);
-  --color-brand-primary-light: var(--brand-primary-light);
   --color-brand-secondary: var(--brand-secondary);
   --color-brand-secondary-dark: var(--brand-secondary-dark);
-  --color-brand-secondary-light: var(--brand-secondary-light);
-  --color-brand-accent: var(--brand-accent);
-  --color-brand-accent-light: var(--brand-accent-light);
   --color-brand-bg: var(--brand-bg);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -39,51 +24,9 @@
 
 /* Tema de la marca TRAMIX (Forzar Claro) */
 body {
-  background: linear-gradient(135deg, var(--background) 0%, #f0f5fa 100%);
+  background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-  min-height: 100vh;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-/* Estilos mejorados para enlaces y botones */
-a {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-button {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Mejorar input focus states */
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.1), inset 0 0 0 2px var(--brand-primary);
-}
-
-/* Estilos para scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--background);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--brand-primary);
-  border-radius: 10px;
-  transition: background 0.3s;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--brand-primary-dark);
 }
 
 /* HU-15: Modo Alto Contraste */
