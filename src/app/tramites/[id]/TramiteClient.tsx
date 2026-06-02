@@ -162,7 +162,7 @@ export default function TramiteClient({ tramite, userAge, isFavorite: initialFav
           </div>
           <a href={tramite.externalLink} target="_blank" rel="noopener noreferrer"
             className="bg-brand-secondary text-brand-primary-dark font-bold px-6 py-2 rounded-xl hover:bg-brand-secondary-dark transition-all shadow-sm hover:shadow-md flex items-center gap-2 text-sm">
-            Consultar Estado de Documento en Registraduría
+            Abrir portal oficial
             <ExternalLink className="w-4 h-4" />
           </a>
         </div>
