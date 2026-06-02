@@ -109,6 +109,135 @@ async function main() {
     }
   })
 
+  await prisma.tramite.create({
+    data: {
+      title: 'Fondo Sapiencia Pregrados',
+      description: 'Accede a un crédito condonable de Sapiencia para estudios de pregrado en técnica profesional, tecnología o carrera profesional. La inscripción es virtual y la legalización depende de convocatoria, puntaje, presupuesto y revisión documental.',
+      code: 'TRM-EDU-01',
+      externalLink: 'https://sapiencia.gov.co/fondos-sapiencia/',
+      isOnline: true,
+      estimatedTime: 'Según calendario de convocatoria y legalización',
+      estimatedCost: 'Inscripción gratuita; crédito condonable según línea',
+      targetAgeRange: null,
+      categoriaId: catEducacion.id,
+      pasos: {
+        create: [
+          { order: 1, title: 'Revisar convocatoria abierta', description: 'Consulta en Sapiencia si hay convocatoria vigente para pregrado, posgrado u otros fondos.' },
+          { order: 2, title: 'Confirmar condiciones de postulación', description: 'Valida residencia o nacimiento en Medellín, estado académico, Saber 11, admisión y oferta permitida.' },
+          { order: 3, title: 'Diligenciar formulario de inscripción', description: 'Ingresa datos del aspirante, deudor solidario, Sisbén, Saber 11, programa académico y valor de matrícula cuando aplique.' },
+          { order: 4, title: 'Esperar preselección por puntaje', description: 'Sapiencia asigna puntaje y define preselección según presupuesto y punto de corte por comuna o corregimiento.' },
+          { order: 5, title: 'Cargar documentos de legalización', description: 'Si eres preseleccionado, carga documentos de identidad, residencia, Sisbén, bachillerato, Saber 11 y soportes diferenciales.' },
+          { order: 6, title: 'Atender revisión y descargar autorización', description: 'Un asesor valida documentos; si aprueba, descarga carta de autorización de desembolso para la institución.' },
+          { order: 7, title: 'Renovar cada semestre', description: 'Presenta certificado académico, promedio mínimo requerido, liquidación de matrícula e historial académico.' }
+        ]
+      },
+      requisitos: {
+        create: [
+          { title: 'Nacer en Medellín o demostrar residencia en el Distrito durante los tres años anteriores a la convocatoria' },
+          { title: 'Ser bachiller o estudiante de grado 11 próximo a graduarse' },
+          { title: 'Haber presentado Saber 11 o equivalente' },
+          { title: 'Estar admitido, estudiando o en proceso de admisión en una IES privada habilitada del Valle de Aburrá' },
+          { title: 'No tener título universitario, salvo continuidad por ciclos propedéuticos u homologación' },
+          { title: 'No recibir otro apoyo público del Distrito para el mismo rubro' }
+        ]
+      },
+      recomendaciones: {
+        create: [
+          { text: 'La inscripción no garantiza el crédito: hay preselección, legalización, presupuesto disponible y revisión documental.' },
+          { text: 'Revisa si aplicas por Fondo EPM, Presupuesto Participativo o Matrícula Cero, porque los requisitos y la condonación cambian.' },
+          { text: 'La condonación puede exigir servicio social y certificación de terminación de estudios.' }
+        ]
+      }
+    }
+  })
+
+  await prisma.tramite.create({
+    data: {
+      title: 'Fondo condonable para Población Víctima del Conflicto Armado',
+      description: 'Postúlate a un fondo externo 100% condonable administrado por ICETEX y dirigido a población víctima reconocida. No es una beca universal: aplica solo para quienes cumplen la condición específica del fondo.',
+      code: 'TRM-EDU-02',
+      externalLink: 'https://web.icetex.gov.co/portal',
+      isOnline: true,
+      estimatedTime: 'Según fechas de convocatoria y validación documental',
+      estimatedCost: 'Postulación gratuita; financiación condonable si cumple condiciones',
+      targetAgeRange: null,
+      categoriaId: catEducacion.id,
+      pasos: {
+        create: [
+          { order: 1, title: 'Verificar población objetivo', description: 'Confirma si estás en el RUV o tienes reconocimiento legal equivalente como víctima.' },
+          { order: 2, title: 'Consultar convocatoria en ICETEX', description: 'Revisa fechas de apertura, cierre y cargue documental antes de iniciar.' },
+          { order: 3, title: 'Diligenciar formulario de solicitud', description: 'Ingresa al micrositio del fondo en ICETEX y completa la postulación virtual.' },
+          { order: 4, title: 'Cargar documentos exigidos', description: 'Adjunta identidad, admisión o matrícula, Saber 11, diploma o acta de bachiller, certificación de víctima y aceptación del reglamento.' },
+          { order: 5, title: 'Esperar validación y resultados', description: 'ICETEX y las entidades responsables revisan documentos y publican resultados según convocatoria.' },
+          { order: 6, title: 'Cumplir condiciones del fondo', description: 'Si eres seleccionado, conserva requisitos académicos y administrativos durante el programa.' },
+          { order: 7, title: 'Solicitar condonación', description: 'Para condonar, debes graduarte, cumplir acompañamiento definido y solicitar formalmente la condonación.' }
+        ]
+      },
+      requisitos: {
+        create: [
+          { title: 'Ser colombiano' },
+          { title: 'Ser bachiller y haber presentado Saber 11' },
+          { title: 'Estar admitido o matriculado en una institución de educación superior reconocida por el Ministerio de Educación' },
+          { title: 'Pertenecer al Registro Único de Víctimas o tener reconocimiento legal equivalente' },
+          { title: 'Tener correo electrónico propio' },
+          { title: 'No poseer título universitario' },
+          { title: 'No recibir otro apoyo económico para el mismo rubro administrado por ICETEX o entidades nacionales' }
+        ]
+      },
+      recomendaciones: {
+        create: [
+          { text: 'Este fondo tiene población objetivo específica; si no cumples la condición de víctima reconocida, no debes iniciar esta ruta.' },
+          { text: 'No cubre inscripciones, habilitaciones, certificados, derechos de grado, materiales, cursos de idiomas ni seminarios.' },
+          { text: 'Lee el reglamento operativo antes de aceptar la postulación.' }
+        ]
+      }
+    }
+  })
+
+  await prisma.tramite.create({
+    data: {
+      title: 'Crédito Educativo ICETEX',
+      description: 'Solicita un crédito educativo para pregrado ante ICETEX. Es financiación reembolsable: algunas líneas o fondos pueden ser condonables, pero el crédito ordinario implica obligación de pago.',
+      code: 'TRM-EDU-03',
+      externalLink: 'https://web.icetex.gov.co/portal',
+      isOnline: true,
+      estimatedTime: 'Según calendario de convocatoria, aprobación y legalización',
+      estimatedCost: 'Trámite gratuito; crédito sujeto a condiciones financieras',
+      targetAgeRange: null,
+      categoriaId: catEducacion.id,
+      pasos: {
+        create: [
+          { order: 1, title: 'Revisar calendario vigente', description: 'Consulta las fechas de solicitud de crédito de pregrado en ICETEX.' },
+          { order: 2, title: 'Escoger plan de financiación', description: 'Compara alternativas como Plan Flexible, Equilibrio, Ágil o ETDH según disponibilidad de la convocatoria.' },
+          { order: 3, title: 'Simular el crédito', description: 'Calcula monto, cuota, plazo y revisa si necesitas deudor solidario.' },
+          { order: 4, title: 'Diligenciar solicitud virtual', description: 'Completa el formulario oficial de ICETEX sin intermediarios.' },
+          { order: 5, title: 'Registrar deudor solidario si aplica', description: 'El deudor debe cumplir condiciones de domicilio, edad, capacidad legal, historial y capacidad de pago.' },
+          { order: 6, title: 'Cargar documentos y esperar verificación', description: 'Si el crédito es aprobado sujeto a verificación, carga documentos para revisión de la IES e ICETEX.' },
+          { order: 7, title: 'Firmar garantías y legalizar', description: 'Firma pagaré y carta de instrucciones dentro del plazo definido.' },
+          { order: 8, title: 'Recibir desembolso', description: 'ICETEX gira el dinero a la institución o al beneficiario según el rubro aprobado.' }
+        ]
+      },
+      requisitos: {
+        create: [
+          { title: 'Ser colombiano' },
+          { title: 'Estar admitido en programa técnico profesional, tecnológico o universitario en una IES registrada en SNIES' },
+          { title: 'Cumplir puntaje Saber 11 exigido si ingresa a primer semestre' },
+          { title: 'Completar formulario de solicitud en ICETEX' },
+          { title: 'Aportar deudor solidario si la línea lo exige' },
+          { title: 'Cargar documentos de legalización dentro del plazo definido' }
+        ]
+      },
+      recomendaciones: {
+        create: [
+          { text: 'Diferencia crédito ICETEX de fondo condonable: el crédito ordinario se paga.' },
+          { text: 'El formulario puede cerrar antes por agotamiento de recursos.' },
+          { text: 'Si no legalizas dentro del plazo, el crédito aprobado puede anularse.' },
+          { text: 'Los trámites de ICETEX son gratuitos y no requieren intermediarios.' }
+        ]
+      }
+    }
+  })
+
   // NEW TRAMITES
   await prisma.tramite.create({
     data: {
