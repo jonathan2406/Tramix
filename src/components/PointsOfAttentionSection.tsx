@@ -9,7 +9,91 @@ const ICON_MAP: Record<string, any> = {
   "Documentación": Building2,
   "Pasaporte": BookUser,
   "Libreta Militar": ShieldCheck,
+  "Salud": ShieldCheck,
 };
+
+const SALUD_EPS_CENTERS = [
+  {
+    name: "EPS SURA - Almacentro",
+    address: "Carrera 43A #34-95, Centro Comercial Almacentro, Local 259, Medellín, Antioquia",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=Carrera+43A+%2334-95%2C+Centro+Comercial+Almacentro%2C+Local+259%2C+Medell%C3%ADn%2C+Antioquia",
+    schedule: "Horario sujeto a la sede EPS",
+    phone: "Consultar canal oficial EPS",
+    status: "activo",
+  },
+  {
+    name: "Nueva EPS - Punto de la Oriental",
+    address: "Carrera 46 #47-66, Centro Comercial Punto de la Oriental, Local 3002, Medellín, Antioquia",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=Carrera+46+%2347-66%2C+Centro+Comercial+Punto+de+la+Oriental%2C+Local+3002%2C+Medell%C3%ADn%2C+Antioquia",
+    schedule: "Horario sujeto a la sede EPS",
+    phone: "Consultar canal oficial EPS",
+    status: "activo",
+  },
+  {
+    name: "EPS Sanitas - Punto Clave",
+    address: "Carrera 46 #27-35, Punto Clave, Medellín, Antioquia",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=Carrera+46+%2327-35%2C+Punto+Clave%2C+Medell%C3%ADn%2C+Antioquia",
+    schedule: "Horario sujeto a la sede EPS",
+    phone: "Consultar canal oficial EPS",
+    status: "activo",
+  },
+  {
+    name: "Salud Total EPS - Tranvía Plaza",
+    address: "Tranvía Plaza, Local 0411, Piso 4, Torre Ayacucho, Medellín, Antioquia",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=Tranv%C3%ADa+Plaza%2C+Local+0411%2C+Piso+4%2C+Torre+Ayacucho%2C+Medell%C3%ADn%2C+Antioquia",
+    schedule: "Horario sujeto a la sede EPS",
+    phone: "Consultar canal oficial EPS",
+    status: "activo",
+  },
+  {
+    name: "Savia Salud EPS - Business Plaza",
+    address: "Calle 45 #55-65, Edificio Business Plaza, Piso 13, Medellín, Antioquia",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=Calle+45+%2355-65%2C+Edificio+Business+Plaza%2C+Piso+13%2C+Medell%C3%ADn%2C+Antioquia",
+    schedule: "Horario sujeto a la sede EPS",
+    phone: "Consultar canal oficial EPS",
+    status: "activo",
+  },
+  {
+    name: "Coosalud EPS - Florida Nueva",
+    address: "Carrera 70 #44B-32, Florida Nueva, Medellín, Antioquia",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=Carrera+70+%2344B-32%2C+Florida+Nueva%2C+Medell%C3%ADn%2C+Antioquia",
+    schedule: "Horario sujeto a la sede EPS",
+    phone: "Consultar canal oficial EPS",
+    status: "activo",
+  },
+  {
+    name: "Mutual Ser / Viva 1A IPS",
+    address: "Calle 9C Sur #50FF-116, Locales 103, 109 y 203, Medellín, Antioquia",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=Calle+9C+Sur+%2350FF-116%2C+Locales+103%2C+109+y+203%2C+Medell%C3%ADn%2C+Antioquia",
+    schedule: "Atención por red de portabilidad",
+    phone: "Consultar canal oficial EPS",
+    status: "activo",
+  },
+  {
+    name: "Compensar EPS / Clínica Medellín Centro",
+    address: "Calle 53 #46-38, Clínica Medellín, Medellín, Antioquia",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=Calle+53+%2346-38%2C+Cl%C3%ADnica+Medell%C3%ADn%2C+Medell%C3%ADn%2C+Antioquia",
+    schedule: "Atención por red de portabilidad",
+    phone: "Consultar canal oficial EPS",
+    status: "activo",
+  },
+  {
+    name: "Comfachocó EPS / Clínica Medellín Belén",
+    address: "Carrera 65B #30-95, Clínica Medellín Belén Fátima, Medellín, Antioquia",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=Carrera+65B+%2330-95%2C+Cl%C3%ADnica+Medell%C3%ADn+Bel%C3%A9n+F%C3%A1tima%2C+Medell%C3%ADn%2C+Antioquia",
+    schedule: "Atención por red de portabilidad",
+    phone: "Consultar canal oficial EPS",
+    status: "activo",
+  },
+  {
+    name: "Compensar EPS / Hospital Alma Mater",
+    address: "Carrera 51B #69-13, Hospital Alma Mater de Antioquia, Medellín, Antioquia",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=Carrera+51B+%2369-13%2C+Hospital+Alma+Mater+de+Antioquia%2C+Medell%C3%ADn%2C+Antioquia",
+    schedule: "Atención por red de portabilidad",
+    phone: "Consultar canal oficial EPS",
+    status: "activo",
+  },
+];
 
 type Punto = {
   id: string; address: string; schedule: string; phone: string; status: string;
@@ -39,11 +123,18 @@ export default function PointsOfAttentionSection({ puntos }: { puntos?: Punto[] 
       groups[catName].centers.push({
         name: p.tramite.title,
         address: p.address,
+        mapUrl: "",
         phone: p.phone,
         schedule: p.schedule,
         status: p.status
       });
     });
+    groups.Salud = {
+      id: "Salud",
+      category: "Salud",
+      icon: ICON_MAP.Salud,
+      centers: SALUD_EPS_CENTERS,
+    };
     return Object.values(groups);
   }, [puntos]);
 
@@ -104,7 +195,18 @@ export default function PointsOfAttentionSection({ puntos }: { puntos?: Punto[] 
               <div className="space-y-3">
                 <div className="flex gap-3 text-sm text-slate-600">
                   <MapPin className={`w-4 h-4 flex-shrink-0 ${isInactive ? "text-slate-400" : "text-brand-secondary"}`} />
-                  <span>{center.address}</span>
+                  {center.mapUrl ? (
+                    <a
+                      href={center.mapUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline decoration-dotted underline-offset-2 hover:text-brand-primary transition-colors"
+                    >
+                      {center.address}
+                    </a>
+                  ) : (
+                    <span>{center.address}</span>
+                  )}
                 </div>
                 <div className="flex gap-3 text-sm text-slate-600">
                   <Clock className={`w-4 h-4 flex-shrink-0 ${isInactive ? "text-slate-400" : "text-brand-secondary"}`} />
