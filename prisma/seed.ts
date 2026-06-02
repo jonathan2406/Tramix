@@ -29,6 +29,10 @@ async function main() {
     data: { name: 'Documentación', icon: 'FileText' }
   })
 
+  const catVivienda = await prisma.categoria.create({
+    data: { name: 'Vivienda', icon: 'Home' }
+  })
+
   // 2. Create Tramites
   await prisma.tramite.create({
     data: {
@@ -404,9 +408,90 @@ async function main() {
     }
   })
 
-  // 4. Create Empty Category Example
-  await prisma.categoria.create({
-    data: { name: 'Vivienda', icon: 'Home' }
+  await prisma.tramite.create({
+    data: {
+      title: 'Subsidio ISVIMED Compra tu Casa',
+      description: 'Postúlate al subsidio distrital de vivienda nueva en Medellín para cierre financiero de proyectos VIP o VIS. La inscripción depende de convocatoria, validación de requisitos y disponibilidad presupuestal.',
+      code: 'TRM-VIV-01',
+      externalLink: 'https://isvimed.gov.co/',
+      isOnline: false,
+      estimatedTime: 'Según convocatoria, validación y disponibilidad presupuestal',
+      estimatedCost: 'Postulación gratuita; subsidio entre 13 y 15 millones según asignación',
+      targetAgeRange: '18-25',
+      categoriaId: catVivienda.id,
+      pasos: {
+        create: [
+          { order: 1, title: 'Identificar proyecto VIS o VIP', description: 'Busca un proyecto de vivienda nueva en Medellín que esté habilitado o sea viable para el subsidio.' },
+          { order: 2, title: 'Vincularse al proyecto', description: 'Formaliza vinculación con constructora, fiduciaria o desarrollador para soportar vivienda, torre, apartamento, plan de pagos y cierre financiero.' },
+          { order: 3, title: 'Reunir documentos del hogar', description: 'Prepara cédulas, registros civiles, certificado de vinculación, ingresos, residencia, Sisbén IV y soportes de ahorro o crédito preaprobado.' },
+          { order: 4, title: 'Realizar inscripción', description: 'El hogar o la constructora realiza la inscripción en ISVIMED cuando la convocatoria esté abierta.' },
+          { order: 5, title: 'Esperar validación de requisitos', description: 'ISVIMED cruza información, revisa documentos y verifica la viabilidad técnica del proyecto.' },
+          { order: 6, title: 'Recibir asignación si aplica', description: 'Si el hogar cumple requisitos y hay presupuesto, se asigna el subsidio.' },
+          { order: 7, title: 'Aplicar subsidio al cierre financiero', description: 'El subsidio se gira directamente al proyecto de vivienda, no al hogar.' }
+        ]
+      },
+      requisitos: {
+        create: [
+          { title: 'Titular mayor de edad' },
+          { title: 'Ingresos del hogar hasta 4 SMLMV' },
+          { title: 'Residencia en Medellín mínimo seis años de forma ininterrumpida' },
+          { title: 'No tener vivienda en Colombia' },
+          { title: 'Estar vinculado a proyecto VIP o VIS nuevo en Medellín con escrituración máximo diciembre de 2028' },
+          { title: 'No haber aplicado antes un subsidio de vivienda' },
+          { title: 'Sisbén IV de integrantes del hogar con encuesta de Medellín' }
+        ]
+      },
+      recomendaciones: {
+        create: [
+          { text: 'No te postules si ya tienes vivienda, si tus ingresos superan 4 SMLMV o si no has vivido seis años en Medellín.' },
+          { text: 'El proyecto debe ser VIS o VIP en Medellín y cumplir condiciones de la convocatoria.' },
+          { text: 'El subsidio no reemplaza toda la cuota inicial; normalmente se combina con ahorro, crédito, cesantías o caja de compensación.' }
+        ]
+      }
+    }
+  })
+
+  await prisma.tramite.create({
+    data: {
+      title: 'Crédito de Vivienda Bancolombia',
+      description: 'Solicita financiación bancaria para compra de vivienda mediante crédito hipotecario o alternativas de vivienda. La aprobación depende del estudio de riesgo, documentos, avalúo, títulos y firma del crédito.',
+      code: 'TRM-VIV-02',
+      externalLink: 'https://www.bancolombia.com/personas',
+      isOnline: false,
+      estimatedTime: 'Variable según estudio financiero, avalúo, títulos y firma',
+      estimatedCost: 'Estudio sujeto a condiciones; pueden aplicar avalúo, estudio de títulos y gastos notariales',
+      targetAgeRange: '18-25',
+      categoriaId: catVivienda.id,
+      pasos: {
+        create: [
+          { order: 1, title: 'Definir tipo de vivienda', description: 'Identifica si comprarás VIS, No VIS, nueva, usada o sobre planos.' },
+          { order: 2, title: 'Calcular cuota inicial', description: 'Estima el porcentaje que debes cubrir: cerca del 20% si es VIS o 30% si es No VIS, más gastos del proceso.' },
+          { order: 3, title: 'Simular el crédito', description: 'Usa el simulador de Bancolombia para estimar monto, cuota, plazo y tipo de financiación.' },
+          { order: 4, title: 'Reunir documentos financieros', description: 'Prepara cédula, certificados laborales, desprendibles, declaración de renta si aplica, extractos y soportes de ingresos.' },
+          { order: 5, title: 'Solicitar preaprobación', description: 'Radica la solicitud para obtener preaprobación o carta de aprobación según evaluación del banco.' },
+          { order: 6, title: 'Realizar estudio del inmueble', description: 'Si hay aprobación financiera, se revisan avalúo, estudio de títulos y validación jurídica.' },
+          { order: 7, title: 'Firmar documentos', description: 'Firma promesa de compraventa, escritura y documentos del crédito.' },
+          { order: 8, title: 'Recibir desembolso', description: 'El banco desembolsa al vendedor o constructor según el negocio aprobado.' }
+        ]
+      },
+      requisitos: {
+        create: [
+          { title: 'Fotocopia de cédula con huella y firma' },
+          { title: 'Certificado de ingresos y retenciones o declaración de renta del último año gravable' },
+          { title: 'Soportes de ingresos según tipo de contrato o actividad económica' },
+          { title: 'Buen comportamiento crediticio y capacidad de endeudamiento' },
+          { title: 'Información del inmueble y tipo de vivienda' },
+          { title: 'Cuota inicial disponible y soportes de ahorro, subsidios o recursos propios' }
+        ]
+      },
+      recomendaciones: {
+        create: [
+          { text: 'Este trámite es financiero, no es un subsidio; la aprobación depende del análisis de riesgo del banco.' },
+          { text: 'Revisa ingresos del hogar, deudas actuales, contrato, valor de vivienda, cuota inicial y subsidios disponibles antes de solicitar.' },
+          { text: 'Considera costos adicionales como estudio de títulos, avalúo, gastos notariales y escritura.' }
+        ]
+      }
+    }
   })
 
   console.log('Seeding completed! Created new tramites and categories.')
