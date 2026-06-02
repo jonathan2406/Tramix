@@ -220,7 +220,15 @@ export default function DashboardClient({ categorias, tramites, userAge, userRol
               <Link href={`/tramites/${tramite.id}`} key={tramite.id} className="group bg-white rounded-2xl p-6 border border-gray-100 shadow-sm min-h-[44px] min-w-[44px] hover:shadow-lg hover:border-brand-primary/30 transition-all flex flex-col hover:-translate-y-1">
                 <div className="flex justify-between items-start mb-4">
                   <span className="px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-xs font-bold tracking-wider">{tramite.code}</span>
-                  {tramite.isOnline && <span className="px-3 py-1 bg-brand-secondary/20 text-brand-secondary-dark rounded-lg text-xs font-bold ring-1 ring-brand-secondary/30">100% Online</span>}
+                  <span
+                    className={`px-3 py-1 rounded-lg text-xs font-bold ${
+                      tramite.isOnline
+                        ? "bg-brand-secondary/20 text-brand-secondary-dark"
+                        : "bg-amber-100 text-amber-800"
+                    }`}
+                  >
+                    {tramite.isOnline ? "Virtual" : "Presencial"}
+                  </span>
                 </div>
                 <h3 className="font-bold text-lg text-brand-primary-dark leading-tight mb-2 group-hover:text-brand-secondary transition-colors">{tramite.title}</h3>
                 <p className="text-slate-500 text-sm line-clamp-2 mt-auto mb-4">{tramite.description}</p>

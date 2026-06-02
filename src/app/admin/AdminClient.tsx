@@ -6,7 +6,7 @@ import { Save, EyeOff, Eye, MapPin, Plus, Trash2, ToggleLeft, ToggleRight, Chevr
 type Tramite = {
   id: string; title: string; description: string; code: string;
   type: string; published: boolean; estimatedTime: string | null;
-  estimatedCost: string | null; categoria: { name: string } | null;
+  estimatedCost: string | null; isOnline: boolean; categoria: { name: string } | null;
   puntosAtencion: PuntoAtencion[]; updatedAt: string;
 };
 type PuntoAtencion = {
@@ -41,11 +41,12 @@ export default function AdminClient({ tramites: initialTramites, puntos: initial
 
   // HU-17: export CSV
   const exportCSV = () => {
-    const headers = ["Código", "Título", "Tipo", "Categoría", "Publicado", "Tiempo Estimado", "Costo Estimado", "Última Actualización"];
+    const headers = ["Código", "Título", "Tipo", "Modalidad", "Categoría", "Publicado", "Tiempo Estimado", "Costo Estimado", "Última Actualización"];
     const rows = tramites.map(t => [
       t.code,
       `"${t.title}"`,
       t.type,
+      t.isOnline ? "Virtual" : "Presencial",
       t.categoria?.name ?? "Sin categoría",
       t.published ? "Sí" : "No",
       t.estimatedTime ?? "",
@@ -265,6 +266,17 @@ export default function AdminClient({ tramites: initialTramites, puntos: initial
                       >
                         <option value="ciudadano">Ciudadano</option>
                         <option value="financiero">Financiero</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-500 mb-1">Modalidad</label>
+                      <select
+                        className="w-full border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-brand-primary"
+                        value={getEdit(t.id, "isOnline", t.isOnline) ? "virtual" : "presencial"}
+                        onChange={(e) => setEdit(t.id, "isOnline", e.target.value === "virtual")}
+                      >
+                        <option value="virtual">Virtual</option>
+                        <option value="presencial">Presencial</option>
                       </select>
                     </div>
                     <div className="md:col-span-2">

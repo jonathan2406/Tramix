@@ -25,7 +25,7 @@ export async function PUT(
 
   const { id } = await params;
   const body = await req.json();
-  const { title, description, estimatedTime, estimatedCost, type, published } = body;
+  const { title, description, estimatedTime, estimatedCost, type, isOnline, published } = body;
 
   const tramite = await prisma.tramite.update({
     where: { id },
@@ -35,6 +35,7 @@ export async function PUT(
       ...(estimatedTime !== undefined && { estimatedTime }),
       ...(estimatedCost !== undefined && { estimatedCost }),
       ...(type !== undefined && { type }),
+      ...(isOnline !== undefined && { isOnline }),
       ...(published !== undefined && { published }),
     },
   });
